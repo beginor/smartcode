@@ -7,8 +7,12 @@
     var table = Model.GetCurrentTable();
 }
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using @(project.Author).@(project.Module).Data.Entities;
 using @(project.Author).@(project.Module).Data.Repositories;
+using NHibernate;
+using NHibernate.NetCore;
 using NUnit.Framework;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Data {
