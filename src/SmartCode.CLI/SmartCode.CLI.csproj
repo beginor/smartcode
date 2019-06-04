@@ -58,5 +58,6 @@
   <ItemGroup>
     <Folder Include="nupkg\" />
     <Folder Include="Properties\" />
+    
   </ItemGroup>
 </Project>
