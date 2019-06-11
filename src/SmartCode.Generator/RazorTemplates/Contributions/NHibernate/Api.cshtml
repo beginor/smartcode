@@ -7,10 +7,6 @@
     var table = Model.GetCurrentTable();
 }
 @functions {
-    string ToControllerName(string className) {
-        var name = NamingUtil.ToPlural(className);
-        return name;
-    }
     string GetDescription(Table t) {
         return t.Description ?? t.ConvertedName;
     }
@@ -32,7 +28,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
     @($"/// <summary>{GetDescription(table)}服务接口</summary>")
     [Route("api/@ToRouteUrl(table.Name)")]
     [ApiController]
-    public class @(ToControllerName(table.ConvertedName))Controller : Controller {
+    public class @(table.ConvertedName)Controller : Controller {
 
         log4net.ILog logger = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
@@ -40,7 +36,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
 
         private I@(table.ConvertedName)Service service;
 
-        public @(ToControllerName(table.ConvertedName))Controller(I@(table.ConvertedName)Service service) {
+        public @(table.ConvertedName)Controller(I@(table.ConvertedName)Service service) {
             this.service = service;
         }
 
