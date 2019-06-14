@@ -7,16 +7,6 @@
     var table = Model.GetCurrentTable();
 }
 @functions {
-    string ToControllerName(string className) {
-        var name = NamingUtil.ToPlural(className);
-        // if (name.StartsWith("App")) {
-        //     name = name.Substring(3);
-        // }
-        // if (name.StartsWith("Aspnet")) {
-        //     name = name.Substring(6);
-        // }
-        return name;
-    }
     string GetDescription(Table t) {
         return t.Description ?? t.ConvertedName;
     }
@@ -27,7 +17,7 @@ using NUnit.Framework;
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Api {
 
     [TestFixture]
-    public class @(ToControllerName(table.ConvertedName))ControllerTest : BaseTest<@(ToControllerName(table.ConvertedName))Controller> {
+    public class @(table.ConvertedName)ControllerTest : BaseTest<@(table.ConvertedName)Controller> {
 
         [Test]
         public void _01_CanResolveTarget() {
