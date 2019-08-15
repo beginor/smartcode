@@ -22,7 +22,10 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module) {
     @($"/// <summary>{table.Description ?? table.ConvertedName}服务实现</summary>")
     public partial class @(table.ConvertedName)Service : BaseService<I@(table.ConvertedName)Repository, @(table.ConvertedName), @(table.ConvertedName)Model, long>, I@(table.ConvertedName)Service {
 
-        public @(table.ConvertedName)Service(I@(table.ConvertedName)Repository repository) : base(repository) { }
+        public @(table.ConvertedName)Service(
+            I@(table.ConvertedName)Repository repository,
+            IMapper mapper
+        ) : base(repository, mapper) { }
 
         protected override long ConvertIdFromString(string id) {
             long result;
