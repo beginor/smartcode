@@ -21,6 +21,7 @@ using Beginor.AppFx.Api;
 using Beginor.AppFx.Core;
 using @(project.Author).@(project.Module).Models;
 using @(project.Author).@(project.Module).Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
@@ -47,10 +48,11 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             base.Dispose(disposing);
         }
 
-        /// <summary> 创建 @(GetDescription(table))  </summary>
+        /// <summary> 创建 @(GetDescription(table)) </summary>
         /// <response code="200">创建 @(GetDescription(table)) 成功</response>
         /// <response code="500">服务器内部错误</response>
         [HttpPost("")]
+        [Authorize(Policy = "@(table.Name).create")]
         public async Task<ActionResult<@(table.ConvertedName)Model>> Create(
             [FromBody]@(table.ConvertedName)Model model
         ) {
@@ -69,9 +71,10 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         /// <response code="500">服务器内部错误</response>
         [HttpDelete("{id:long}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> Delete(string id) {
+        [Authorize(Policy = "@(table.Name).delete")]
+        public async Task<ActionResult> Delete(long id) {
             try {
-                await service.DeleteAsync(id);
+                await service.DeleteAsync(id.ToString());
                 return NoContent();
             }
             catch (Exception ex) {
@@ -84,6 +87,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         /// <response code="200">成功, 分页返回结果</response>
         /// <response code="500">服务器内部错误</response>
         [HttpGet("")]
+        [Authorize(Policy = "@(table.Name).read")]
         public async Task<ActionResult<PaginatedResponseModel<@(table.ConvertedName)Model>>> GetAll(
             [FromQuery]@(table.ConvertedName)SearchModel model
         ) {
@@ -104,9 +108,10 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         /// <response code="404"> @(GetDescription(table)) 不存在</response>
         /// <response code="500">服务器内部错误</response>
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(string id) {
+        [Authorize(Policy = "@(table.Name).read")]
+        public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(long id) {
             try {
-                var result = await service.GetByIdAsync(id);
+                var result = await service.GetByIdAsync(id.ToString());
                 if (result == null) {
                     return NotFound();
                 }
@@ -125,16 +130,17 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         /// <response code="404"> @(GetDescription(table)) 不存在</response>
         /// <response code="500">服务器内部错误</response>
         [HttpPut("{id:long}")]
+        [Authorize(Policy = "@(table.Name).update")]
         public async Task<ActionResult<@(table.ConvertedName)Model>> Update(
-            [FromRoute]string id,
+            [FromRoute]long id,
             [FromBody]@(table.ConvertedName)Model model
         ) {
             try {
-                var modelInDb = await service.GetByIdAsync(id);
+                var modelInDb = await service.GetByIdAsync(id.ToString());
                 if (modelInDb == null) {
                     return NotFound();
                 }
-                await service.UpdateAsync(id, model);
+                await service.UpdateAsync(id.ToString(), model);
                 return model;
             }
             catch (Exception ex) {
