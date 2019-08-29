@@ -92,7 +92,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
                 return result;
             }
             catch (Exception ex) {
-                logger.Error("Can not get all @(table.Name)s.", ex);
+                logger.Error("Can not get all @(table.Name) .", ex);
                 return this.InternalServerError(ex.GetOriginalMessage());
             }
         }
