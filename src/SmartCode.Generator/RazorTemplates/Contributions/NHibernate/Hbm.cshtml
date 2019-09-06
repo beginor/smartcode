@@ -1,5 +1,6 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
@@ -16,24 +17,6 @@
     var assemblyName = $"{project.Author}.{project.Module}.{buildTask.Module}";
     var newLine = Environment.NewLine;
 }
-@functions {
-    string GetGeneratorClass(Column col) {
-        if (col.LanguageType == "int") {
-            return "trigger-identity";
-        }
-        if (col.LanguageType == "long") {
-            return "trigger-identity";
-        }
-        return "assigned";
-    }
-
-    string GetHibernateType(string langType) {
-        if (langType == "byte[]") {
-            return "binary";
-        }
-        return langType.ToLower();
-    }
-}
 <?xml version="1.0" encoding="UTF-8" ?>
 <hibernate-mapping
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -43,7 +26,7 @@
 
   <class name="@($"{table.ConvertedName}")" table="@table.Name" @if (!string.IsNullOrEmpty(schema)) { <text>schema="@schema"</text> }>
   @if (pkCols.Count() == 1) {
-    <id name="Id" column="@firstPk.Name" type="@GetHibernateType(firstPk.LanguageType)">
+    <id name="Id" column="@firstPk.Name" type="@GetHbmType(firstPk.LanguageType)">
       <generator class="@GetGeneratorClass(firstPk)">
       </generator>
     </id>
@@ -51,13 +34,13 @@
   else {
     <composite-id>
     @foreach (var col in pkCols) {
-      <key-property name="@col.ConvertedName" column="@col.Name" type="@GetHibernateType(col.LanguageType)" />
+      <key-property name="@col.ConvertedName" column="@col.Name" type="@GetHbmType(col.LanguageType)" />
     }
     </composite-id>
   }
 
   @foreach (var col in normalCols) {
-    <property name="@col.ConvertedName" column="@col.Name" type="@GetHibernateType(col.LanguageType)" not-null="@((!col.IsNullable).ToString().ToLower())" @if (col.LanguageType == "string") { <text>length="@col.DataLength" </text> }/>
+    <property name="@col.ConvertedName" column="@col.Name" type="@GetHbmType(col.LanguageType)" not-null="@((!col.IsNullable).ToString().ToLower())" @if (col.LanguageType == "string") { <text>length="@col.DataLength" </text> }/>
   }
   </class>
 

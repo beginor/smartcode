@@ -1,12 +1,12 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
     var buildTask = Model.Build;
     var table = Model.GetCurrentTable();
 }
-@functions { }
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ using @(project.Author).@(project.Module).Models;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module) {
 
-    @($"/// <summary>{table.Description ?? table.ConvertedName}服务实现</summary>")
+    @($"/// <summary>{table.GetSummary()}服务实现</summary>")
     public partial class @(table.ConvertedName)Service : BaseService<I@(table.ConvertedName)Repository, @(table.ConvertedName), @(table.ConvertedName)Model, long>, I@(table.ConvertedName)Service {
 
         public @(table.ConvertedName)Service(
@@ -35,7 +35,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module) {
             return result;
         }
 
-        @($"/// <summary>{table.Description ?? table.ConvertedName}搜索，返回分页结果。</summary>")
+        @($"/// <summary>{table.GetSummary()}搜索，返回分页结果。</summary>")
         public async Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(
             @(table.ConvertedName)SearchModel model
         ) {

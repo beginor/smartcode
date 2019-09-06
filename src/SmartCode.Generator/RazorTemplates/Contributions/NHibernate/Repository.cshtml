@@ -1,6 +1,6 @@
 @using SmartCode
-@using SmartCode.Db
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
@@ -12,23 +12,6 @@
     var normalCols = table.Columns.Where(col => !col.IsPrimaryKey);
     var newLine = Environment.NewLine;
 }
-@functions {
-
-    public string ConvertLangType(Column column) {
-        if (String.IsNullOrEmpty(column.LanguageType)) {
-            return "NAType";
-        }
-        if (!column.IsNullable) {
-            return column.LanguageType;
-        }
-
-        if (column.LanguageType.Contains("[]") || column.LanguageType.ToLower() == "string") {
-            return column.LanguageType;
-        }
-        return $"{column.LanguageType}?";
-    }
-
-}
 using System.Linq;
 using System.Threading.Tasks;
 using Beginor.AppFx.Repository.Hibernate;
@@ -38,8 +21,8 @@ using @(project.Author).@(project.Module).@(buildTask.Module).Entities;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories {
 
-    @($"/// <summary>{table.Description ?? table.ConvertedName}仓储实现</summary>")
-    public partial class @(table.ConvertedName)Repository : HibernateRepository<@(table.ConvertedName), @(ConvertLangType(firstPk))>, I@(table.ConvertedName)Repository {
+    @($"/// <summary>{table.GetSummary()}仓储实现</summary>")
+    public partial class @(table.ConvertedName)Repository : HibernateRepository<@(table.ConvertedName), @(ConvertCsType(firstPk))>, I@(table.ConvertedName)Repository {
 
         public @(table.ConvertedName)Repository(ISessionFactory sessionFactory) : base(sessionFactory) { }
 

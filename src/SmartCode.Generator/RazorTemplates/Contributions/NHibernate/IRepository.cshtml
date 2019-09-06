@@ -1,5 +1,6 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
@@ -8,30 +9,13 @@
     var pkCols = table.Columns.Where(col => col.IsPrimaryKey).ToArray();
     var firstPk = pkCols.First();
 }
-@functions {
-
-    public string ConvertLangType(Column column) {
-        if (String.IsNullOrEmpty(column.LanguageType)) {
-            return "NAType";
-        }
-        if (!column.IsNullable) {
-            return column.LanguageType;
-        }
-
-        if (column.LanguageType.Contains("[]") || column.LanguageType.ToLower() == "string") {
-            return column.LanguageType;
-        }
-        return $"{column.LanguageType}?";
-    }
-
-}
 using System.Threading.Tasks;
 using Beginor.AppFx.Core;
 using @(project.Author).@(project.Module).@(buildTask.Module).Entities;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories {
 
-    @($"/// <summary>{table.Description ?? table.ConvertedName}仓储接口</summary>")
-    public partial interface I@(table.ConvertedName)Repository : IRepository<@(table.ConvertedName), @(ConvertLangType(firstPk))> { }
+    @($"/// <summary>{table.GetSummary()}仓储接口</summary>")
+    public partial interface I@(table.ConvertedName)Repository : IRepository<@(table.ConvertedName), @(ConvertCsType(firstPk))> { }
 
 }

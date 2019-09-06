@@ -1,15 +1,11 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
     var buildTask = Model.Build;
     var table = Model.GetCurrentTable();
-}
-@functions {
-    string GetDescription(Table t) {
-        return t.Description ?? t.ConvertedName;
-    }
 }
 using @(project.Author).@(project.Module).Api.Controllers;
 using NUnit.Framework;

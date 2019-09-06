@@ -1,5 +1,6 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
@@ -11,39 +12,24 @@
     var normalCols = table.Columns.Where(col => !col.IsPrimaryKey);
     var newLine = Environment.NewLine;
 }
-@functions {
-    string ConvertLangType(Column column) {
-        if (String.IsNullOrEmpty(column.LanguageType)) {
-            return "NAType";
-        }
-        if (!column.IsNullable) {
-            return column.LanguageType;
-        }
-
-        if (column.LanguageType.Contains("[]") || column.LanguageType.ToLower() == "string") {
-            return column.LanguageType;
-        }
-        return $"{column.LanguageType}?";
-    }
-}
 using System;
 using Beginor.AppFx.Core;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Entities {
 
-    @($"/// <summary>{table.Description ?? table.ConvertedName}</summary>")
+    @($"/// <summary>{table.GetSummary()}</summary>")
     public partial class @(table.ConvertedName) @if (pkCount == 1) { <text>: BaseEntity<@firstPk.LanguageType> </text> } {
 
     @if (pkCount > 1) {
         foreach (var col in pkCols) {
-            @(Html.PadLeft(8) + $"/// <summary>{col.Description ?? col.Name}</summary>{newLine}")
-            @(Html.PadLeft(8) + $"public virtual {ConvertLangType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
+            @(Html.PadLeft(8) + $"/// <summary>{col.GetSummary()}</summary>{newLine}")
+            @(Html.PadLeft(8) + $"public virtual {ConvertCsType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
         }
-        
+
     }
     @foreach (var col in normalCols) {
-        @(Html.PadLeft(8) + $"/// <summary>{col.Description ?? col.Name}</summary>{newLine}")
-        @(Html.PadLeft(8) + $"public virtual {ConvertLangType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
+        @(Html.PadLeft(8) + $"/// <summary>{col.GetSummary()}</summary>{newLine}")
+        @(Html.PadLeft(8) + $"public virtual {ConvertCsType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
     }
 
     @if (pkCount > 1) {
@@ -73,7 +59,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Entities {
         @(Html.PadLeft(12) + $"}}{newLine}")
         @(Html.PadLeft(12) + $"return Equals(({table.ConvertedName})obj);{newLine}")
         @(Html.PadLeft(8) + $"}}{newLine}")
-        
+
     }
     }
 

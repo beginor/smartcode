@@ -1,19 +1,11 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
     var buildTask = Model.Build;
     var table = Model.GetCurrentTable();
-}
-@functions {
-    string GetDescription(Table t) {
-        return t.Description ?? t.ConvertedName;
-    }
-    string ToRouteUrl(string tableName) {
-        var url = tableName.ToLowerInvariant();
-        return url.Replace('_', '-');
-    }
 }
 using System;
 using System.Threading.Tasks;
@@ -26,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
 
-    @($"/// <summary>{GetDescription(table)}服务接口</summary>")
+    @($"/// <summary>{table.GetSummary()}服务接口</summary>")
     [Route("api/@ToRouteUrl(table.Name)")]
     [ApiController]
     public class @(table.ConvertedName)Controller : Controller {
@@ -48,8 +40,8 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             base.Dispose(disposing);
         }
 
-        /// <summary> 创建 @(GetDescription(table)) </summary>
-        /// <response code="200">创建 @(GetDescription(table)) 成功</response>
+        /// <summary> 创建 @(table.GetSummary()) </summary>
+        /// <response code="200">创建 @(table.GetSummary()) 成功</response>
         /// <response code="500">服务器内部错误</response>
         [HttpPost("")]
         [Authorize(Policy = "@(table.Name).create")]
@@ -66,8 +58,8 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
         }
 
-        /// <summary>删除 @(GetDescription(table)) </summary>
-        /// <response code="204">删除 @(GetDescription(table)) 成功</response>
+        /// <summary>删除 @(table.GetSummary()) </summary>
+        /// <response code="204">删除 @(table.GetSummary()) 成功</response>
         /// <response code="500">服务器内部错误</response>
         [HttpDelete("{id:long}")]
         [ProducesResponseType(204)]
@@ -83,7 +75,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
         }
 
-        /// <summary>搜索 @(GetDescription(table)) ， 分页返回结果</summary>
+        /// <summary>搜索 @(table.GetSummary()) ， 分页返回结果</summary>
         /// <response code="200">成功, 分页返回结果</response>
         /// <response code="500">服务器内部错误</response>
         [HttpGet("")]
@@ -102,10 +94,10 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         }
 
         /// <summary>
-        /// 获取指定的 @(GetDescription(table))
+        /// 获取指定的 @(table.GetSummary())
         /// </summary>
-        /// <response code="200">返回 @(GetDescription(table)) 信息</response>
-        /// <response code="404"> @(GetDescription(table)) 不存在</response>
+        /// <response code="200">返回 @(table.GetSummary()) 信息</response>
+        /// <response code="404"> @(table.GetSummary()) 不存在</response>
         /// <response code="500">服务器内部错误</response>
         [HttpGet("{id:long}")]
         [Authorize(Policy = "@(table.Name).read")]
@@ -124,10 +116,10 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         }
 
         /// <summary>
-        /// 更新 @(GetDescription(table))
+        /// 更新 @(table.GetSummary())
         /// </summary>
-        /// <response code="200">更新成功，返回 @(GetDescription(table)) 信息</response>
-        /// <response code="404"> @(GetDescription(table)) 不存在</response>
+        /// <response code="200">更新成功，返回 @(table.GetSummary()) 信息</response>
+        /// <response code="404"> @(table.GetSummary()) 不存在</response>
         /// <response code="500">服务器内部错误</response>
         [HttpPut("{id:long}")]
         [Authorize(Policy = "@(table.Name).update")]

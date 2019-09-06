@@ -1,5 +1,6 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
 @model BuildContext
 @{
     var project = Model.Project;
@@ -9,41 +10,24 @@
     var newLine = Environment.NewLine;
     var pkType = "string";
 }
-@functions {
-    string ConvertLangType(Column col) {
-        if (String.IsNullOrEmpty(col.LanguageType)) {
-            return "NAType";
-        }
-        if (col.LanguageType.ToLower() == "long" && col.Name.EndsWith("_id")) {
-            return "string";
-        }
-        if (!col.IsNullable) {
-            return col.LanguageType;
-        }
-        if (col.LanguageType.Contains("[]") || col.LanguageType.ToLower() == "string") {
-            return col.LanguageType;
-        }
-        return $"{col.LanguageType}?";
-    }
-}
 using System;
 using System.ComponentModel.DataAnnotations;
 using Beginor.AppFx.Core;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module) {
 
-    @($"/// <summary>{table.Description ?? table.ConvertedName}模型</summary>")
+    @($"/// <summary>{table.GetSummary()}模型</summary>")
     public partial class @(table.ConvertedName + "Model") : StringEntity {
 
     @foreach (var col in normalColumns) {
-        @(Html.PadLeft(8) + $"/// <summary>{col.Description ?? col.Name}</summary>{newLine}")
-        @if (!col.IsNullable) { @(Html.PadLeft(8) + $"[Required(ErrorMessage = \"{col.Description ?? col.Name} 必须填写！\")]{newLine}") }
-        @(Html.PadLeft(8) + $"public {ConvertLangType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
+        @(Html.PadLeft(8) + $"/// <summary>{col.GetSummary()}</summary>{newLine}")
+        @if (!col.IsNullable) { @(Html.PadLeft(8) + $"[Required(ErrorMessage = \"{col.GetSummary()} 必须填写！\")]{newLine}") }
+        @(Html.PadLeft(8) + $"public {ConvertCsModelType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
     }
 
     }
 
-    @($"/// <summary>{table.Description ?? table.ConvertedName}搜索参数</summary>")
+    @($"/// <summary>{table.GetSummary()}搜索参数</summary>")
     public partial class @(table.ConvertedName)SearchModel : PaginatedRequestModel { }
 
 }
