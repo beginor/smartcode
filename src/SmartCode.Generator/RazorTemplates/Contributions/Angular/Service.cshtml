@@ -1,0 +1,117 @@
+@using SmartCode
+@using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
+@model BuildContext
+@{
+    var project = Model.Project;
+    var build = Model.Build;
+    var table = Model.GetCurrentTable();
+}
+import { Injectable, Inject } from '@@angular/core';
+import { HttpClient, HttpParams } from '@@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+
+/** @table.GetSummary() 服务 */
+@@Injectable({
+    providedIn: 'root'
+})
+export class @(ToClassName(table.Name))Service {
+
+    public searchModel: @(ToClassName(table.Name))SearchModel = {
+        skip: 0,
+        take: 10
+    };
+    public total = new BehaviorSubject<number>(0);
+    public data = new BehaviorSubject<@(ToClassName(table.Name))Model[]>([]);
+
+    private baseUrl = `${this.apiRoot}/@(ToPath(table.Name))`;
+
+    constructor(
+        private http: HttpClient,
+        @@Inject('apiRoot') private apiRoot: string
+    ) { }
+
+    @($"/** 搜索 {@table.GetSummary()} */")
+    public async search(): Promise<void> {
+        let params = new HttpParams();
+        for (const key in this.searchModel) {
+            if (this.searchModel.hasOwnProperty(key)) {
+                const val = this.searchModel[key];
+                params = params.set(key, val);
+            }
+        }
+        const result = await this.http.get<@(ToClassName(table.Name))ResultModel>(
+            this.baseUrl,
+            {
+                params: params
+            }
+        ).toPromise();
+        this.total.next(result.total);
+        this.data.next(result.data);
+    }
+
+    @($"/** 创建 {@table.GetSummary()} */")
+    public async create(model: @(ToClassName(table.Name))Model): Promise<@(ToClassName(table.Name))Model> {
+        const result = await this.http.post<@(ToClassName(table.Name))Model>(
+            this.baseUrl,
+            model
+        ).toPromise();
+        return result;
+    }
+
+    @($"/** 获取指定的 {@table.GetSummary()} */")
+    public async getById(id: string): Promise<@(ToClassName(table.Name))Model> {
+        const result = await this.http.get<@(ToClassName(table.Name))Model>(
+            `${this.baseUrl}/${id}`
+        ).toPromise();
+        return result;
+    }
+
+    @($"/** 删除 {@table.GetSummary()} */")
+    public async delete(id: string): Promise<void> {
+        await this.http.delete(
+            `${this.baseUrl}/${id}`
+        ).toPromise();
+    }
+
+    @($"/** 更新 {@table.GetSummary()} */")
+    public async update(
+        id: string,
+        model: @(ToClassName(table.Name))Model
+    ): Promise<@(ToClassName(table.Name))Model> {
+        const result = await this.http.put<@(ToClassName(table.Name))Model>(
+            `${this.baseUrl}/${id}`,
+            model
+        ).toPromise();
+        return result;
+    }
+
+}
+
+/** @table.GetSummary() */
+export interface @(ToClassName(table.Name))Model {
+@foreach (var col in table.Columns) {
+    @(Html.PadLeft(4) + $"/** {col.GetSummary()} */{Environment.NewLine}")
+    @(Html.PadLeft(4) + $"{col.ConvertedName}?: {ConvertTsType(col)};{Environment.NewLine}")
+}
+}
+
+/** @table.GetSummary() 搜索参数 */
+export interface @(ToClassName(table.Name))SearchModel {
+    /** 跳过的记录数 */
+    skip?: number;
+    /** 取多少条记录 */
+    take?: number;
+}
+
+/** @(table.GetSummary()) 搜索结果 */
+export interface @(ToClassName(table.Name))ResultModel {
+    /** 请求跳过的记录数 */
+    skip?: number;
+    /** 请求多少条记录 */
+    take?: number;
+    /** 总记录数 */
+    total?: number;
+    /** 数据列表 */
+    data?: @(ToClassName(table.Name))Model[];
+}

@@ -1,0 +1,23 @@
+@using SmartCode
+@using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
+@model BuildContext
+@{
+    var project = Model.Project;
+    var build = Model.Build;
+    var table = Model.GetCurrentTable();
+}
+import { TestBed } from '@@angular/core/testing';
+
+import { @ToClassName(table.Name)Service } from './@(table.ConvertedName).service';
+
+describe('@ToClassName(table.Name)Service', () => {
+
+    beforeEach(() => TestBed.configureTestingModule({}));
+
+    it('should be created', () => {
+        const service: @ToClassName(table.Name)Service = TestBed.get(@ToClassName(table.Name)Service);
+        expect(service).toBeTruthy();
+    });
+
+});
