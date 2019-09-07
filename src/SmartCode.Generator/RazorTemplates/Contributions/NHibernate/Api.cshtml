@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
 
     @($"/// <summary>{table.GetSummary()}服务接口</summary>")
-    [Route("api/@ToRouteUrl(table.Name)")]
+    [Route("api/@ToPath(table.Name)")]
     [ApiController]
     public class @(table.ConvertedName)Controller : Controller {
 

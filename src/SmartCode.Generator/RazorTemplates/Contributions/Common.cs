@@ -5,15 +5,16 @@ namespace SmartCode.Generator.RazorTemplates.Contributions {
 
     public static class Common {
 
-        public static string ToRouteUrl(string tableName) {
-            var url = tableName.ToLowerInvariant();
-            return url.Replace('_', '-');
+        public static string ToPath(string tableName) {
+            var words = tableName.ToLowerInvariant().Split('_');
+            var converter = new StrikeThroughConverter();
+            return converter.Convert(words);
         }
 
         public static string ToClassName(string tableName) {
-            var parts = tableName.Split('_');
+            var words = tableName.Split('_');
             var converter = new PascalCaseSingularConverter();
-            var className = converter.Convert(parts);
+            var className = converter.Convert(words);
             return className;
         }
 
@@ -57,10 +58,23 @@ namespace SmartCode.Generator.RazorTemplates.Contributions {
         public static string ConvertTsType(
             Column col
         ) {
-            if (col.LanguageType.ToLower() == "number" && (col.Name.Equals("id") || col.Name.EndsWith("_id"))) {
+            if (col.LanguageType.ToLower() == "number"
+                && (col.Name.Equals("id") || col.Name.EndsWith("_id"))) {
                 return "string";
             }
             return col.LanguageType;
+        }
+
+        public static string ToNgSelector(
+            string tableName
+        ) {
+            var words = tableName.Split('_');
+            var converter = new StrikeThroughConverter();
+            var selector = converter.Convert(words);
+            if (!selector.StartsWith("app-")) {
+                selector = "app-" + selector;
+            }
+            return NamingUtil.ToSingular(selector);
         }
 
     }
