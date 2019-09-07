@@ -1,0 +1,35 @@
+@using SmartCode
+@using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
+@model BuildContext
+@{
+    var project = Model.Project;
+    var build = Model.Build;
+    var table = Model.GetCurrentTable();
+}
+import { async, ComponentFixture, TestBed } from '@@angular/core/testing';
+
+import { ListComponent } from './list.component';
+
+describe('@(ToClassName(table.Name))-ListComponent', () => {
+
+    let component: ListComponent;
+    let fixture: ComponentFixture<ListComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ListComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ListComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+});

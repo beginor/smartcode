@@ -1,0 +1,24 @@
+@using SmartCode
+@using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
+@model BuildContext
+@{
+    var project = Model.Project;
+    var build = Model.Build;
+    var table = Model.GetCurrentTable();
+}
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--light);
+
+  ngb-pagination ::ng-deep ul.pagination {
+    margin-bottom: 0 !important;
+  }
+
+}
