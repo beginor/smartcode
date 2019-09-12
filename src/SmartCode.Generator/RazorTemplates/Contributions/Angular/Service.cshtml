@@ -11,7 +11,7 @@ import { Injectable, Inject } from '@@angular/core';
 import { HttpClient, HttpParams } from '@@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
-/** @table.GetSummary() 服务 */
+/** @table.GetSummary()服务 */
 @@Injectable({
     providedIn: 'root'
 })
@@ -28,10 +28,11 @@ export class @(ToClassName(table.Name))Service {
 
     constructor(
         private http: HttpClient,
-        @@Inject('apiRoot') private apiRoot: string
+        @@Inject('apiRoot') private apiRoot: string,
+        private ui: UiService
     ) { }
 
-    @($"/** 搜索 {@table.GetSummary()} */")
+    @($"/** 搜索{@table.GetSummary()} */")
     public async search(): Promise<void> {
         let params = new HttpParams();
         for (const key in this.searchModel) {
@@ -50,7 +51,7 @@ export class @(ToClassName(table.Name))Service {
         this.data.next(result.data);
     }
 
-    @($"/** 创建 {@table.GetSummary()} */")
+    @($"/** 创建{@table.GetSummary()} */")
     public async create(model: @(ToClassName(table.Name))Model): Promise<@(ToClassName(table.Name))Model> {
         const result = await this.http.post<@(ToClassName(table.Name))Model>(
             this.baseUrl,
@@ -59,7 +60,7 @@ export class @(ToClassName(table.Name))Service {
         return result;
     }
 
-    @($"/** 获取指定的 {@table.GetSummary()} */")
+    @($"/** 获取指定的{@table.GetSummary()} */")
     public async getById(id: string): Promise<@(ToClassName(table.Name))Model> {
         const result = await this.http.get<@(ToClassName(table.Name))Model>(
             `${this.baseUrl}/${id}`
@@ -67,14 +68,14 @@ export class @(ToClassName(table.Name))Service {
         return result;
     }
 
-    @($"/** 删除 {@table.GetSummary()} */")
+    @($"/** 删除{@table.GetSummary()} */")
     public async delete(id: string): Promise<void> {
         await this.http.delete(
             `${this.baseUrl}/${id}`
         ).toPromise();
     }
 
-    @($"/** 更新 {@table.GetSummary()} */")
+    @($"/** 更新{@table.GetSummary()} */")
     public async update(
         id: string,
         model: @(ToClassName(table.Name))Model
