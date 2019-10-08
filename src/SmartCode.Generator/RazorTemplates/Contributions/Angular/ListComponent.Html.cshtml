@@ -18,8 +18,18 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between">
           <h5 class="card-title mb-0">@table.GetSummary()</h5>
+          <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-outline-primary"
+              (click)="showDetail('0', true)">
+              <i class="fa fa-plus"></i> 新建@table.GetSummary()
+            </button>
+            <button type="button" class="btn btn-outline-secondary"
+              (click)="loadData()">
+              <i class="fa fa-sync"></i> 刷新
+            </button>
+          </div>
         </div>
         <form class="p-2 bg-light">
           <div class="form-row">
@@ -40,6 +50,11 @@
                   </select>
                 </div>
                 <div class="col-auto text-muted px-2 py-1">条记录</div>
+                <div class="col-auto text-muted px-2">
+                  <ng-container *ngIf="vm.loading">
+                    <i class="fa fa-spin fa-spinner"></i> 加载中...
+                  </ng-container>
+                </div>
               </div>
             </div>
             <div class="col-6">
@@ -102,6 +117,8 @@
         </div>
       </div>
     </div>
-
+  </div>
+  <div class="detail-container">
+    <router-outlet></router-outlet>
   </div>
 </div>

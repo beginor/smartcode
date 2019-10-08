@@ -11,6 +11,8 @@ import { Injectable, Inject } from '@@angular/core';
 import { HttpClient, HttpParams } from '@@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
+import { UiService} from 'projects/web/src/app/common';
+
 /** @table.GetSummary()服务 */
 @@Injectable({
     providedIn: 'root'
@@ -23,6 +25,7 @@ export class @(ToClassName(table.Name))Service {
     };
     public total = new BehaviorSubject<number>(0);
     public data = new BehaviorSubject<@(ToClassName(table.Name))Model[]>([]);
+    public loading: boolean;
 
     private baseUrl = `${this.apiRoot}/@(ToPath(table.Name))`;
 
@@ -41,14 +44,26 @@ export class @(ToClassName(table.Name))Service {
                 params = params.set(key, val);
             }
         }
-        const result = await this.http.get<@(ToClassName(table.Name))ResultModel>(
-            this.baseUrl,
-            {
-                params: params
-            }
-        ).toPromise();
-        this.total.next(result.total);
-        this.data.next(result.data);
+        this.loading = true;
+        try {
+            const result = await this.http.get<@(ToClassName(table.Name))ResultModel>(
+                this.baseUrl,
+                {
+                    params: params
+                }
+            ).toPromise();
+            this.total.next(result.total);
+            this.data.next(result.data);
+        }
+        catch (ex) {
+            console.error(ex.toString());
+            this.total.next(0);
+            this.data.next([]);
+            this.ui.showAlert({ type: 'danger', message: @($"'加载${table.GetSummary()}数据出错!'")});
+        }
+        finally {
+            this.loading = false;
+        }
     }
 
     @($"/** 创建{@table.GetSummary()} */")

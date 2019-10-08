@@ -8,6 +8,7 @@
     var table = Model.GetCurrentTable();
 }
 import { Component, OnInit } from '@@angular/core';
+import { Router, ActivatedRoute } from '@@angular/router';
 
 import { @(ToClassName(table.Name))Service } from '../@(ToPath(table.Name)).service';
 
@@ -18,12 +19,32 @@ import { @(ToClassName(table.Name))Service } from '../@(ToPath(table.Name)).serv
 })
 export class ListComponent implements OnInit {
 
-constructor(
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
         public vm: @(ToClassName(table.Name))Service
     ) { }
 
-    public async ngOnInit(): Promise<void> {
+    public ngOnInit(): void {
+        this.loadData();
+    }
+
+    public async loadData(): Promise<void> {
         await this.vm.search();
+    }
+
+    public showDetail(id: string, editable: boolean): void {
+        this.router.navigate(
+            ['./', id, { editable: editable }],
+            { relativeTo: this.route, skipLocationChange: true }
+        );
+    }
+
+    public delete(id: string): void {
+        const deleted = await this.vm.delete(id);
+        if (deleted) {
+            this.vm.search();
+        }
     }
 
 }
