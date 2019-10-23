@@ -1,0 +1,9 @@
+@using SmartCode
+@using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
+@model BuildContext
+@{
+    var project = Model.Project;
+    var build = Model.Build;
+    var table = Model.GetCurrentTable();
+}
