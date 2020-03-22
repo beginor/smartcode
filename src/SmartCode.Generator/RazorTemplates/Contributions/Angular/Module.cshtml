@@ -1,0 +1,39 @@
+@using SmartCode
+@using SmartCode.Generator.Entity
+@using static SmartCode.Generator.RazorTemplates.Contributions.Common;
+@model BuildContext
+@{
+    var project = Model.Project;
+    var build = Model.Build;
+    var table = Model.GetCurrentTable();
+}
+import { NgModule } from '@@angular/core';
+import { CommonModule } from '@@angular/common';
+import { FormsModule } from '@@angular/forms';
+import {
+    NgbPaginationModule, NgbTooltipModule
+} from '@@ng-bootstrap/ng-bootstrap';
+
+import { ServicesModule } from 'services';
+
+import { AppCommonModule } from 'projects/web/src/app/common';
+import { @(ToClassName(table.Name))RoutingModule } from './@(ToPath(table.Name))-routing.module';
+import { ListComponent } from './list/list.component';
+import { DetailComponent } from './detail/detail.component';
+
+@@NgModule({
+    declarations: [
+        ListComponent,
+        DetailComponent
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgbPaginationModule,
+        NgbTooltipModule,
+        ServicesModule,
+        AppCommonModule,
+        @(ToClassName(table.Name))RoutingModule
+    ]
+})
+export class @(ToClassName(table.Name))Module { }

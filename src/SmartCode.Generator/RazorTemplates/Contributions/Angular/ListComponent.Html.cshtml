@@ -11,19 +11,20 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink="/">首页</a></li>
     <li class="breadcrumb-item"><a routerLink="/">填写合适的面包屑</a></li>
-    <li class="breadcrumb-item active" aria-current="page">@table.GetSummary()</li>
+    <li class="breadcrumb-item active" aria-current="page">@(table.GetSummary())</li>
   </ol>
 </nav>
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
-      <div class="card">
+      <div class="card" *ngIf="(account.info | async) as info">
         <div class="card-header d-flex justify-content-between">
-          <h5 class="card-title mb-0">@table.GetSummary()</h5>
+          <h5 class="card-title mb-0">@(table.GetSummary())</h5>
           <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-outline-primary"
+            <button *ngIf="info.privileges['@(table.Name).create']"
+              type="button" class="btn btn-outline-primary"
               (click)="showDetail('0', true)">
-              <i class="fa fa-plus"></i> 新建@table.GetSummary()
+              <i class="fa fa-plus"></i> 新建(@table.GetSummary())
             </button>
             <button type="button" class="btn btn-outline-secondary"
               (click)="loadData()">
@@ -77,14 +78,34 @@
 @foreach (var col in table.Columns) {
                 <th scope="col" class="text-center text-nowrap text-muted">@col.GetSummary()</th>
 }
+                <th scope="col" class="text-center text-nowrap text-muted">操作</th>
               </tr>
             </thead>
             <tbody *ngIf="(vm.data | async) as data">
               <tr *ngFor="let item of data; let i = index;">
                 <th scope="row" class="text-right text-muted">{{i+1+vm.searchModel.skip}}</th>
 @foreach (var col in table.Columns) {
-                <td class="@($"{(ConvertTsType(col) == "number" ? "text-right" : "text-left")}")">{{item.@col.ConvertedName}}</td>
+                <td class='@($"{(ConvertTsType(col) == "number" ? "text-right" : "text-left")}")'>{{item.@(col.ConvertedName)}}</td>
 }
+                <td class="text-center">
+                  <div class="btn-group btn-group-sm">
+                    <button *ngIf="info.privileges['@(table.Name).read']"
+                      class="btn btn-outline-secondary" ngbTooltip="详情" placement="top" [openDelay]="300"
+                      (click)="showDetail(item.id, false)">
+                      <i class="fa fa-list-alt"></i>
+                    </button>
+                    <button *ngIf="info.privileges['@(table.Name).update']"
+                      class="btn btn-outline-secondary" ngbTooltip="编辑" placement="top" [openDelay]="300"
+                      (click)="showDetail(item.id, true)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button *ngIf="info.privileges['@(table.Name).delete']"
+                        class="btn btn-outline-secondary" ngbTooltip="删除" placement="top" [openDelay]="300"
+                      (click)="delete(item.id)">
+                      <i class="fa fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>

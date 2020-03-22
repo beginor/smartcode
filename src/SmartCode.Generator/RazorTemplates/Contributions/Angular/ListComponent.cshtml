@@ -10,6 +10,7 @@
 import { Component, OnInit } from '@@angular/core';
 import { Router, ActivatedRoute } from '@@angular/router';
 
+import { AccountService } from 'services';
 import { @(ToClassName(table.Name))Service } from '../@(ToPath(table.Name)).service';
 
 @@Component({
@@ -22,6 +23,7 @@ export class ListComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        public account: AccountService,
         public vm: @(ToClassName(table.Name))Service
     ) { }
 
@@ -40,7 +42,7 @@ export class ListComponent implements OnInit {
         );
     }
 
-    public delete(id: string): void {
+    public async delete(id: string): Promise<void> {
         const deleted = await this.vm.delete(id);
         if (deleted) {
             this.vm.search();
