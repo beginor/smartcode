@@ -1,6 +1,9 @@
 ﻿@using SmartCode
 @using SmartCode.Db
+@using SmartCode.Generator
+@using SmartCode.Generator.Entity
 @model BuildContext
+
 @{
     var project = Model.Project;
     var dbSource = Model.GetDataSource<DbSource>();
@@ -15,23 +18,42 @@
     {
         throw new SmartCodeException($"{table.Name} can not find PKColumn！");
     }
-    
+
     if (!project.BuildTasks.TryGetValue("Entity", out var entityBuild))
     {
         throw new ArgumentException("can not find Project -> BuildTasks -> [Entity] .");
     }
 
     var entityName = $"{project.Module}.{entityBuild.Module}.{table.ConvertedName}";
+    IDbTypeConverter dbTypeConverter = Model.PluginManager.Resolve<IDbTypeConverter>();
 }
 
+@functions
+{
+
+    String GetJdbcType(IDbTypeConverter dbTypeConverter, DbSource dbSource, Column column)
+    {
+        var dbType = column.DbType;
+        var dbProvider = dbSource.DbRepository.DbProvider;
+        var jdbcType = dbTypeConverter.LanguageType(dbProvider, "Jdbc", dbType);
+        if (dbType.Equals("tinyint", StringComparison.OrdinalIgnoreCase)
+            && column.DataLength <= 4)
+        {
+            jdbcType = "BOOLEAN";
+        }
+        return String.IsNullOrEmpty(jdbcType) ? "" : $" jdbcType=\"{jdbcType}\"";
+    }
+}
+
+
 <resultMap id="@resultMapName" type="@entityName">
-    <id column="@pkCol.Name" property="@pkCol.ConvertedName"></id>
+    <id column="@pkCol.Name" property="@pkCol.ConvertedName" @GetJdbcType(dbTypeConverter, dbSource, pkCol)></id>
     @foreach (var col in table.Columns)
     {
         if (col.IsPrimaryKey)
         {
             continue;
         }
-        <result column="@col.Name" property="@col.ConvertedName"/>
+        <result column="@col.Name" property="@col.ConvertedName" @GetJdbcType(dbTypeConverter, dbSource, col)/>
     }
 </resultMap>

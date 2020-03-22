@@ -8,22 +8,23 @@ using SmartSql;
 
 namespace SmartCode.ETL
 {
-    public class ExtractDataSource : AbstractExtractDataSource
+    public class ExtractData : AbstractExtractData
     {
-        public ExtractDataSource(Project project, ILoggerFactory loggerFactory, ILogger<ExtractDataSource> logger,
-            IProjectBuilder projectBuilder, IPluginManager pluginManager) : base(project, loggerFactory, logger,
-            projectBuilder, pluginManager)
+        public ExtractData(Project project, ILoggerFactory loggerFactory, ILogger<ExtractData> logger,
+            IPluginManager pluginManager) : base(project, loggerFactory, logger, pluginManager)
         {
         }
 
         public override string Name => "Extract";
         public DataSet DataSet { get; set; }
         public DataTable TransformData { get; set; }
+
         protected override async Task LoadData(RequestContext requestContext)
         {
             DataSet = await SqlMapper.GetDataSetAsync(requestContext);
             TransformData = DataSet.Tables[0];
         }
+
         public override long GetMaxId(string pkColumn)
         {
             return TransformData.Rows.Cast<DataRow>().AsParallel().Max(dr => Convert.ToInt64(dr[pkColumn]));
@@ -38,7 +39,5 @@ namespace SmartCode.ETL
         {
             return TransformData.Rows.Count;
         }
-
-
     }
 }
