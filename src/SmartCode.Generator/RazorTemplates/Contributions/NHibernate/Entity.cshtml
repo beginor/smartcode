@@ -4,6 +4,10 @@
 @model BuildContext
 @{
     var project = Model.Project;
+    var schema = string.Empty;
+    if (project.DataSource.Parameters.TryGetValue("DbSchema", out var s)) {
+        schema = (string) s;
+    }
     var buildTask = Model.Build;
     var table = Model.GetCurrentTable();
     var pkCols = table.Columns.Where(col => col.IsPrimaryKey).ToArray();
@@ -14,53 +18,85 @@
 }
 using System;
 using Beginor.AppFx.Core;
+using NHibernate.Mapping.Attributes;
 
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Entities {
 
-    @($"/// <summary>{table.GetSummary()}</summary>")
-    public partial class @(table.ConvertedName) @if (pkCount == 1) { <text>: BaseEntity<@firstPk.LanguageType> </text> } {
-
-    @if (pkCount > 1) {
-        foreach (var col in pkCols) {
-            @(Html.PadLeft(8) + $"/// <summary>{col.GetSummary()}</summary>{newLine}")
-            @(Html.PadLeft(8) + $"public virtual {ConvertCsType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
-        }
-
+    /// <summary>@table.GetSummary()</summary>
+    [Class(@if (!string.IsNullOrEmpty(schema)) { <text>Schema = "@schema", </text> }Table = "@table.Name")]
+    public partial class @(table.ConvertedName) @if (pkCount == 1) {<text>: BaseEntity<@firstPk.LanguageType></text>} {
+@if (pkCount > 1) {
+<text>
+        /// <summary>CompositeId for @string.Join(",", pkCols.Select(pk => pk.Name).ToArray())</summary>
+        [CompositeId]</text>
+    foreach (var col in pkCols) {
+<text>
+        [KeyProperty(Name = "@col.ConvertedName", Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)" @if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]</text>
     }
-    @foreach (var col in normalCols) {
-        @(Html.PadLeft(8) + $"/// <summary>{col.GetSummary()}</summary>{newLine}")
-        @(Html.PadLeft(8) + $"public virtual {ConvertCsType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
+<text>
+        protected virtual int CompositeId => GetHashCode();
+</text>
+    foreach (var col in pkCols) {
+<text>
+        /// <summary>@col.GetSummary()</summary>
+        public virtual @ConvertCsType(col) @col.ConvertedName { get; set; }
+</text>
     }
-
-    @if (pkCount > 1) {
-        @(Html.PadLeft(8) + $"public bool Equals({table.ConvertedName} other) {{{newLine}")
-        @(Html.PadLeft(12) + $"unchecked {{{newLine}")
-        @(Html.PadLeft(16) + $"int hashCode;{newLine}")
+} else {
+<text>
+        /// <summary>@firstPk.GetSummary()</summary>
+        [Id(Name = "@firstPk.ConvertedName", Column = "@firstPk.Name", Type = "@GetHbmType(firstPk.LanguageType)", Generator = "@GetGeneratorClass(firstPk)")]
+        public override @ConvertCsType(firstPk) @firstPk.ConvertedName { get { return base.Id; } set { base.Id = value; } }
+</text>
+}
+@foreach (var col in normalCols) {
+<text>
+        /// <summary>@col.GetSummary()</summary>
+        [Property(Name = "@col.ConvertedName", Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)", NotNull = @((!col.IsNullable).ToString().ToLower())@if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]
+        public virtual @ConvertCsType(col) @col.ConvertedName { get; set; }
+</text>
+}
+@if (pkCount > 1) {
+<text>
+        public override int GetHashCode() {
+            unchecked {
+                int hashCode;</text>
         for (var i = 0; i < pkCols.Length; i++) {
             if (i == 0) {
-                @(Html.PadLeft(16) + $"hashCode = {pkCols[i].ConvertedName}.GetHashCode();{newLine}")
+<text>
+                hashCode = @(pkCols[i].ConvertedName).GetHashCode();</text>
             }
             else {
-                @(Html.PadLeft(16) + $"hashCode = (hashCode * 397) ^ {pkCols[i].ConvertedName}.GetHashCode();{newLine}")
+<text>
+                hashCode = (hashCode * 397) ^ @(pkCols[i].ConvertedName).GetHashCode();</text>
             }
         }
-        @(Html.PadLeft(16) + $"return hashCode;{newLine}")
-        @(Html.PadLeft(12) + $"}}{newLine}")
-        @(Html.PadLeft(8) + $"}}{newLine}{newLine}")
-        @(Html.PadLeft(8) + $"public override bool Equals(object obj) {{{newLine}")
-        @(Html.PadLeft(12) + $"if (ReferenceEquals(null, obj)) {{{newLine}")
-        @(Html.PadLeft(16) + $"return false;{newLine}")
-        @(Html.PadLeft(12) + $"}}{newLine}")
-        @(Html.PadLeft(12) + $"if (ReferenceEquals(this, obj)) {{{newLine}")
-        @(Html.PadLeft(16) + $"return true;{newLine}")
-        @(Html.PadLeft(12) + $"}}{newLine}")
-        @(Html.PadLeft(12) + $"if (obj.GetType() != this.GetType()) {{{newLine}")
-        @(Html.PadLeft(16) + $"return false;{newLine}")
-        @(Html.PadLeft(12) + $"}}{newLine}")
-        @(Html.PadLeft(12) + $"return Equals(({table.ConvertedName})obj);{newLine}")
-        @(Html.PadLeft(8) + $"}}{newLine}")
+<text>
+                return hashCode;
+            }
+        }</text>
+<text>
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) {
+                return false;
+            }
+            if (ReferenceEquals(this, obj)) {
+                return true;
+            }
+            if (obj.GetType() != this.GetType()) {
+                return false;
+            }
+            return Equals((@table.ConvertedName)obj);
+        }
 
-    }
+        public virtual bool Equals(@table.ConvertedName other) {
+            if (other == null){
+                return false;
+            }
+            return this.GetHashCode() == other.GetHashCode();
+        }
+</text>
+}
     }
 
 }
