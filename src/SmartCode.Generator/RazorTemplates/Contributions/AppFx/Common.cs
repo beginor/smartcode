@@ -1,7 +1,7 @@
 using SmartCode.Generator.Entity;
 using SmartCode.WordsConverter;
 
-namespace SmartCode.Generator.RazorTemplates.Contributions {
+namespace SmartCode.Generator.RazorTemplates.Contributions.AppFx {
 
     public static class Common {
 
