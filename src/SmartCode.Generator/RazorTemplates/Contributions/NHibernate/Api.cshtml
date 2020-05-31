@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Beginor.AppFx.Api;
 using Beginor.AppFx.Core;
 using @(project.Author).@(project.Module).Models;
@@ -23,19 +24,21 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
     [Route("api/@ToPath(table.Name)")]
     public class @(table.ConvertedName)Controller : Controller {
 
-        log4net.ILog logger = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
-        );
+        private ILogger<@(table.ConvertedName)Controller> logger;
+        private I@(table.ConvertedName)Repository repository;
 
-        private I@(table.ConvertedName)Repository repo;
-
-        public @(table.ConvertedName)Controller(I@(table.ConvertedName)Repository repo) {
-            this.repo = repo;
+        public @(table.ConvertedName)Controller(
+            ILogger<@(table.ConvertedName)Controller> logger,
+            I@(table.ConvertedName)Repository repository
+        ) {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         protected override void Dispose(bool disposing) {
             if (disposing) {
-                repo = null;
+                logger = null;
+                repository = null;
             }
             base.Dispose(disposing);
         }
@@ -49,11 +52,11 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             [FromBody]@(table.ConvertedName)Model model
         ) {
             try {
-                await repo.SaveAsync(model);
+                await repository.SaveAsync(model);
                 return model;
             }
             catch (Exception ex) {
-                logger.Error("Can not create @(table.Name).", ex);
+                logger.LogError(ex, $"Can not save {model.ToJson()} to @(table.Name).");
                 return this.InternalServerError(ex.GetOriginalMessage());
             }
         }
@@ -66,11 +69,11 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         [Authorize("@(table.Name).delete")]
         public async Task<ActionResult> Delete(long id) {
             try {
-                await repo.DeleteAsync(id);
+                await repository.DeleteAsync(id);
                 return NoContent();
             }
             catch (Exception ex) {
-                logger.Error("Can not delete @(table.Name).", ex);
+                logger.LogError(ex, $"Can not delete @(table.Name) by id {id} .");
                 return this.InternalServerError(ex.GetOriginalMessage());
             }
         }
@@ -84,11 +87,11 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             [FromQuery]@(table.ConvertedName)SearchModel model
         ) {
             try {
-                var result = await repo.SearchAsync(model);
+                var result = await repository.SearchAsync(model);
                 return result;
             }
             catch (Exception ex) {
-                logger.Error("Can not get all @(table.Name) .", ex);
+                logger.LogError(ex, $"Can not search @(table.Name) with {model.ToJson()} .");
                 return this.InternalServerError(ex.GetOriginalMessage());
             }
         }
@@ -103,14 +106,14 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         [Authorize("@(table.Name).read")]
         public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(long id) {
             try {
-                var result = await repo.GetByIdAsync(id);
+                var result = await repository.GetByIdAsync(id);
                 if (result == null) {
                     return NotFound();
                 }
                 return result;
             }
             catch (Exception ex) {
-                logger.Error($"Can not get @(table.Name) with {id}.", ex);
+                logger.LogError(ex, $"Can not get @(table.Name) by id {id}.");
                 return this.InternalServerError(ex.GetOriginalMessage());
             }
         }
@@ -128,15 +131,15 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             [FromBody]@(table.ConvertedName)Model model
         ) {
             try {
-                var modelInDb = await repo.GetByIdAsync(id);
+                var modelInDb = await repository.GetByIdAsync(id);
                 if (modelInDb == null) {
                     return NotFound();
                 }
-                await repo.UpdateAsync(id, model);
+                await repository.UpdateAsync(id, model);
                 return model;
             }
             catch (Exception ex) {
-                logger.Error($"Can not update @(table.Name) with {id}.", ex);
+                logger.LogError(ex, $"Can not update @(table.Name) by id {id} with {model.ToJson()} .");
                 return this.InternalServerError(ex.GetOriginalMessage());
             }
         }
