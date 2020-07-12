@@ -25,7 +25,8 @@ export class @(ToClassName(table.Name))Service {
     };
     public total = new BehaviorSubject<number>(0);
     public data = new BehaviorSubject<@(ToClassName(table.Name))Model[]>([]);
-    public loading: boolean;
+    public loading = false;
+    public showPagination = false;
 
     private baseUrl = `${this.apiRoot}/@(ToPath(table.Name))`;
 
@@ -52,14 +53,19 @@ export class @(ToClassName(table.Name))Service {
                     params: params
                 }
             ).toPromise();
-            this.total.next(result.total);
-            this.data.next(result.data);
+            const total = result.total ?? 0;
+            const data = result.data ?? [];
+            this.total.next(total);
+            this.data.next(data);
+            this.showPagination = total > data.length;
         }
         catch (ex) {
             console.error(ex.toString());
             this.total.next(0);
             this.data.next([]);
-            this.ui.showAlert({ type: 'danger', message: @($"'加载{table.GetSummary()}数据出错!'")});
+            this.ui.showAlert(
+                { type: 'danger', message: @($"'加载{table.GetSummary()}数据出错!'")}
+            );
         }
         finally {
             this.loading = false;
@@ -79,7 +85,9 @@ export class @(ToClassName(table.Name))Service {
     }
 
     @($"/** 创建{table.GetSummary()} */")
-    public async create(model: @(ToClassName(table.Name))Model): Promise<@(ToClassName(table.Name))Model> {
+    public async create(
+        model: @(ToClassName(table.Name))Model
+    ): Promise<@(ToClassName(table.Name))Model | undefined> {
         try {
             const result = await this.http.post<@(ToClassName(table.Name))Model>(
                 this.baseUrl,
@@ -89,13 +97,15 @@ export class @(ToClassName(table.Name))Service {
         }
         catch (ex) {
             console.error(ex);
-            this.ui.showAlert({ type: 'danger', message: @($"'创建{table.GetSummary()}出错！'") });
-            return null;
+            this.ui.showAlert(
+                { type: 'danger', message: @($"'创建{table.GetSummary()}出错！'") }
+            );
+            return;
         }
     }
 
     @($"/** 获取指定的{table.GetSummary()} */")
-    public async getById(id: string): Promise<@(ToClassName(table.Name))Model> {
+    public async getById(id: string): Promise<@(ToClassName(table.Name))Model | undefined> {
         try {
             const result = await this.http.get<@(ToClassName(table.Name))Model>(
                 `${this.baseUrl}/${id}`
@@ -104,8 +114,10 @@ export class @(ToClassName(table.Name))Service {
         }
         catch (ex) {
             console.error(ex);
-            this.ui.showAlert({ type: 'danger', message: @($"'获取指定的{table.GetSummary()}出错！'") });
-            return null;
+            this.ui.showAlert(
+                { type: 'danger', message: @($"'获取指定的{table.GetSummary()}出错！'") }
+            );
+            return;
         }
     }
 
@@ -123,7 +135,9 @@ export class @(ToClassName(table.Name))Service {
         }
         catch (ex) {
             console.error(ex);
-            this.ui.showAlert({ type: 'danger', message: @($"'删除{table.GetSummary()}出错！'") });
+            this.ui.showAlert(
+                { type: 'danger', message: @($"'删除{table.GetSummary()}出错！'") }
+            );
             return false;
         }
     }
@@ -132,7 +146,7 @@ export class @(ToClassName(table.Name))Service {
     public async update(
         id: string,
         model: @(ToClassName(table.Name))Model
-    ): Promise<@(ToClassName(table.Name))Model> {
+    ): Promise<@(ToClassName(table.Name))Model | undefined> {
         try {
             const result = await this.http.put<@(ToClassName(table.Name))Model>(
                 `${this.baseUrl}/${id}`,
@@ -142,8 +156,10 @@ export class @(ToClassName(table.Name))Service {
         }
         catch (ex) {
             console.error(ex);
-            this.ui.showAlert({ type: 'danger', message: @($"'更新{table.GetSummary()}出错！'") });
-            return null;
+            this.ui.showAlert(
+                { type: 'danger', message: @($"'更新{table.GetSummary()}出错！'") }
+            );
+            return;
         }
     }
 
@@ -159,10 +175,11 @@ export interface @(ToClassName(table.Name))Model {
 
 /** @table.GetSummary() 搜索参数 */
 export interface @(ToClassName(table.Name))SearchModel {
+    [key: string]: undefined | number | string;
     /** 跳过的记录数 */
-    skip?: number;
+    skip: number;
     /** 取多少条记录 */
-    take?: number;
+    take: number;
 }
 
 /** @(table.GetSummary()) 搜索结果 */

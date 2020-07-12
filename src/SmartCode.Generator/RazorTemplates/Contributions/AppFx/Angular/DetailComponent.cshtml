@@ -30,11 +30,11 @@ import { @(ToClassName(table.Name))Service, @(ToClassName(table.Name))Model } fr
 export class DetailComponent implements OnInit {
 
     public animation = '';
-    public title: string;
-    public editable: boolean;
+    public title = '';
+    public editable = false;
     public model: @(ToClassName(table.Name))Model = {};
 
-    private id: string;
+    private id = '';
     private reloadList = false;
 
     constructor(
@@ -62,7 +62,10 @@ export class DetailComponent implements OnInit {
 
     public async ngOnInit(): Promise<void> {
         if (this.id !== '0') {
-            this.model = await this.vm.getById(this.id);
+            const model = await this.vm.getById(this.id);
+            if (!!model) {
+                this.model = model;
+            }
         }
     }
 
