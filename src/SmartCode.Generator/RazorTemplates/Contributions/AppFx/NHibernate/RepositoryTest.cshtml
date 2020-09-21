@@ -1,6 +1,7 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
-@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common;
+@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common
+@inherits SmartCode.TemplateEngine.Impl.RazorCoreTemplate<SmartCode.BuildContext>
 @model BuildContext
 @{
     var project = Model.Project;

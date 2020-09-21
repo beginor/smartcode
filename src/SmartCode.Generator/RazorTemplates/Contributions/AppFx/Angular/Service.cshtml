@@ -1,7 +1,7 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
-@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common;
-@model BuildContext
+@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common
+@inherits SmartCode.TemplateEngine.Impl.RazorCoreTemplate<SmartCode.BuildContext>
 @{
     var project = Model.Project;
     var build = Model.Build;
@@ -168,8 +168,8 @@ export class @(ToClassName(table.Name))Service {
 /** @table.GetSummary() */
 export interface @(ToClassName(table.Name))Model {
 @foreach (var col in table.Columns) {
-    @(Html.PadLeft(4) + $"/** {col.GetSummary()} */{Environment.NewLine}")
-    @(Html.PadLeft(4) + $"{col.ConvertedName}?: {ConvertTsType(col)};{Environment.NewLine}")
+    @(PadLeft(4) + $"/** {col.GetSummary()} */{NewLine()}")
+    @(PadLeft(4) + $"{col.ConvertedName}?: {ConvertTsType(col)};{NewLine()}")
 }
 }
 

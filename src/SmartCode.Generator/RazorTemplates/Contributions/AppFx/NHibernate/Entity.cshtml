@@ -1,7 +1,7 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
-@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common;
-@model BuildContext
+@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common
+@inherits SmartCode.TemplateEngine.Impl.RazorCoreTemplate<SmartCode.BuildContext>
 @{
     var project = Model.Project;
     var schema = string.Empty;

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>SmartCode</ToolCommandName>
@@ -58,6 +58,6 @@
   <ItemGroup>
     <Folder Include="nupkg\" />
     <Folder Include="Properties\" />
-    
+
   </ItemGroup>
 </Project>

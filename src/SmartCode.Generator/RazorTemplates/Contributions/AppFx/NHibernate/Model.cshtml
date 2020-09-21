@@ -1,14 +1,12 @@
 @using SmartCode
 @using SmartCode.Generator.Entity
-@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common;
-@model BuildContext
+@using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common
+@inherits SmartCode.TemplateEngine.Impl.RazorCoreTemplate<SmartCode.BuildContext>
 @{
     var project = Model.Project;
     var buildTask = Model.Build;
     var table = Model.GetCurrentTable();
     var normalColumns = table.Columns.Where(col => !col.IsPrimaryKey);
-    var newLine = Environment.NewLine;
-    var pkType = "string";
 }
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -20,9 +18,9 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module) {
     public partial class @(table.ConvertedName + "Model") : StringEntity {
 
     @foreach (var col in normalColumns) {
-        @(Html.PadLeft(8) + $"/// <summary>{col.GetSummary()}</summary>{newLine}")
-        @if (!col.IsNullable) { @(Html.PadLeft(8) + $"[Required(ErrorMessage = \"{col.GetSummary()} 必须填写！\")]{newLine}") }
-        @(Html.PadLeft(8) + $"public {ConvertCsModelType(col)} {col.ConvertedName} {{ get; set; }}{newLine}")
+        @(PadLeft(8) + $"/// <summary>{col.GetSummary()}</summary>{NewLine()}")
+        @if (!col.IsNullable) { @(PadLeft(8) + $"[Required(ErrorMessage = \"{col.GetSummary()} 必须填写！\")]{NewLine()}") }
+        @(PadLeft(8) + $"public {ConvertCsModelType(col)} {col.ConvertedName} {{ get; set; }}{NewLine()}")
     }
 
     }
