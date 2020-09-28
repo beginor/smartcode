@@ -12,7 +12,7 @@
   <div class="card-header d-flex justify-content-between align-content-center">
     <h5 class="card-title mb-0">{{title}}</h5>
     <div class="btn-group btn-group-sm">
-      <button *ngIf="info.privileges['app_privileges.update'] && editable"
+      <button *ngIf="info.privileges['@(table.Name).update'] && editable"
         type="button" class="btn btn-sm btn-outline-primary"
         (click)="save()" [disabled]="!detailForm.valid">
         <i class="fa fa-check"></i> 保存
@@ -52,7 +52,7 @@
     }
 }
   </div>
-  <div *ngIf="info.privileges['app_privileges.update'] && editable"
+  <div *ngIf="info.privileges['@(table.Name).update'] && editable"
     class="card-footer d-flex justify-content-between">
     <button type="button" class="btn btn-sm btn-outline-primary"
       (click)="save()" [disabled]="!detailForm.valid">
