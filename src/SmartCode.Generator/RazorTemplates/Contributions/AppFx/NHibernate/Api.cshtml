@@ -43,6 +43,24 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             base.Dispose(disposing);
         }
 
+        /// <summary>搜索 @(table.GetSummary()) ， 分页返回结果</summary>
+        /// <response code="200">成功, 分页返回结果</response>
+        /// <response code="500">服务器内部错误</response>
+        [HttpGet("")]
+        [Authorize("@(table.Name).read")]
+        public async Task<ActionResult<PaginatedResponseModel<@(table.ConvertedName)Model>>> Search(
+            [FromQuery]@(table.ConvertedName)SearchModel model
+        ) {
+            try {
+                var result = await repository.SearchAsync(model);
+                return result;
+            }
+            catch (Exception ex) {
+                logger.LogError(ex, $"Can not search @(table.Name) with {model.ToJson()} .");
+                return this.InternalServerError(ex.GetOriginalMessage());
+            }
+        }
+
         /// <summary> 创建 @(table.GetSummary()) </summary>
         /// <response code="200">创建 @(table.GetSummary()) 成功</response>
         /// <response code="500">服务器内部错误</response>
@@ -74,24 +92,6 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
             catch (Exception ex) {
                 logger.LogError(ex, $"Can not delete @(table.Name) by id {id} .");
-                return this.InternalServerError(ex.GetOriginalMessage());
-            }
-        }
-
-        /// <summary>搜索 @(table.GetSummary()) ， 分页返回结果</summary>
-        /// <response code="200">成功, 分页返回结果</response>
-        /// <response code="500">服务器内部错误</response>
-        [HttpGet("")]
-        [Authorize("@(table.Name).read")]
-        public async Task<ActionResult<PaginatedResponseModel<@(table.ConvertedName)Model>>> GetAll(
-            [FromQuery]@(table.ConvertedName)SearchModel model
-        ) {
-            try {
-                var result = await repository.SearchAsync(model);
-                return result;
-            }
-            catch (Exception ex) {
-                logger.LogError(ex, $"Can not search @(table.Name) with {model.ToJson()} .");
                 return this.InternalServerError(ex.GetOriginalMessage());
             }
         }
