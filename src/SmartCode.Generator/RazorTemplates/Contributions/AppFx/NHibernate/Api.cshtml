@@ -131,8 +131,8 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             [FromBody]@(table.ConvertedName)Model model
         ) {
             try {
-                var modelInDb = await repository.GetByIdAsync(id);
-                if (modelInDb == null) {
+                var exists = await repository.ExitsAsync(id);
+                if (!exists) {
                     return NotFound();
                 }
                 await repository.UpdateAsync(id, model);
