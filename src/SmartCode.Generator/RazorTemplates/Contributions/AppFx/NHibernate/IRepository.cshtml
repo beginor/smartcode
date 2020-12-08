@@ -9,6 +9,8 @@
     var pkCols = table.Columns.Where(col => col.IsPrimaryKey).ToArray();
     var firstPk = pkCols.First();
 }
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Beginor.AppFx.Core;
 using @(project.Author).@(project.Module).Models;
