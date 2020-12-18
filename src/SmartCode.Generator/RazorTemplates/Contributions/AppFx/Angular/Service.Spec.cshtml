@@ -16,7 +16,7 @@ describe('@ToClassName(table.Name)Service', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: @ToClassName(table.Name)Service = TestBed.get(@ToClassName(table.Name)Service);
+        const service: @ToClassName(table.Name)Service = TestBed.inject(@ToClassName(table.Name)Service);
         expect(service).toBeTruthy();
     });
 
