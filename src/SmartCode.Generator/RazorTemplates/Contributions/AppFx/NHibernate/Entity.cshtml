@@ -23,7 +23,7 @@ using NHibernate.Mapping.Attributes;
 namespace @(project.Author).@(project.Module).@(buildTask.Module).Entities {
 
     /// <summary>@table.GetSummary()</summary>
-    [Class(@if (!string.IsNullOrEmpty(schema)) { <text>Schema = "@schema", </text> }Table = "@table.Name")]
+    [Class(@if (!string.IsNullOrEmpty(schema)) { <text>Schema = "@schema", </text> }Table = "@table.Name"@if (table.Columns.Any(c => c.Name.Equals("is_deleted"))) {<text>, Where = "is_deleted = false"</text>})]
     public partial class @(table.ConvertedName) @if (pkCount == 1) {<text>: BaseEntity<@firstPk.LanguageType></text>} {
 @if (pkCount > 1) {
 <text>

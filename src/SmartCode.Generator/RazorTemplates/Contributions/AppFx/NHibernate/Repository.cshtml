@@ -49,6 +49,17 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories {
             };
         }
 
+@if (table.Columns.Any(c => c.Name.Equals("is_deleted"))) {<text>
+        public override async Task DeleteAsync(long id, CancellationToken token = default) {
+            var entity = Session.Get<@table.ConvertedName>(id);
+            if (entity != null) {
+                entity.IsDeleted = true;
+                await Session.SaveAsync(entity, token);
+                await Session.FlushAsync();
+            }
+        }
+</text>
+}
     }
 
 }
