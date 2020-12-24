@@ -39,15 +39,23 @@
     </div>
     }
     else {
-    <div class="form-group" [class.is-valid]="@(col.ConvertedName).valid"
-      [class.is-invalid]="!(@(col.ConvertedName).valid || @(col.ConvertedName).pristine)">
+    <div class="form-group">
       <label class="form-label text-muted" for="@(col.ConvertedName)">@col.GetSummary() @if (!col.IsNullable) { <i class="text-danger">*</i> }</label>
+      @if (col.IsNullable) {
       <input class="form-control" type="text" id="@(col.ConvertedName)" name="@(col.ConvertedName)"
-        placeholder="请输入@(col.GetSummary()) ..." [(ngModel)]="model.@(col.ConvertedName)"
+        placeholder="请输入@(col.GetSummary()) ..."
+        [(ngModel)]="model.@(col.ConvertedName)" [disabled]="!editable"
+      />
+      } else {
+      <input class="form-control" type="text" id="@(col.ConvertedName)" name="@(col.ConvertedName)"
+        placeholder="请输入@(col.GetSummary()) ..." required
+        [disabled]="!editable"
+        [(ngModel)]="model.@(col.ConvertedName)"
+        @($"#{col.ConvertedName}")="ngModel"
         [class.is-invalid]="!(@(col.ConvertedName).valid || @(col.ConvertedName).pristine)"
         [class.is-valid]="@(col.ConvertedName).valid"
-        required @($"#{col.ConvertedName}")="ngModel" [disabled]="!editable"
       />
+      }
     </div>
     }
 }
