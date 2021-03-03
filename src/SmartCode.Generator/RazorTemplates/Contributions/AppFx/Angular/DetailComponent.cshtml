@@ -33,7 +33,7 @@ export class DetailComponent implements OnInit {
     public animation = '';
     public title = '';
     public editable = false;
-    public model: @(ToClassName(table.Name))Model = {};
+    public model: @(ToClassName(table.Name))Model = { id: '' };
 
     private id = '';
     private reloadList = false;

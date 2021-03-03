@@ -169,7 +169,7 @@ export class @(ToClassName(table.Name))Service {
 export interface @(ToClassName(table.Name))Model {
 @foreach (var col in table.Columns) {
     @(PadLeft(4) + $"/** {col.GetSummary()} */{NewLine()}")
-    @(PadLeft(4) + $"{col.ConvertedName}?: {ConvertTsType(col)};{NewLine()}")
+    @(PadLeft(4) + $"{col.ConvertedName}" + (col.IsNullable ? "?:" : ":") + $" {ConvertTsType(col)};{NewLine()}")
 }
 }
 
