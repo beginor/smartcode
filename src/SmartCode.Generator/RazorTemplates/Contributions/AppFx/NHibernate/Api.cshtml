@@ -103,7 +103,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
         /// <response code="404"> @(table.GetSummary()) 不存在</response>
         /// <response code="500">服务器内部错误</response>
         [HttpGet("{id:long}")]
-        [Authorize("@(table.Name).read")]
+        [Authorize("@(table.Name).read_by_id")]
         public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(long id) {
             try {
                 var result = await repository.GetByIdAsync(id);
