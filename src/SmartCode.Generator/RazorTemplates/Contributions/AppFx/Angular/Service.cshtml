@@ -9,7 +9,7 @@
 }
 import { Injectable, Inject, ErrorHandler } from '@@angular/core';
 import { HttpClient, HttpParams } from '@@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
 
 import { UiService } from 'projects/web/src/app/common';
 
@@ -48,12 +48,9 @@ export class @(ToClassName(table.Name))Service {
         }
         this.loading = true;
         try {
-            const result = await this.http.get<@(ToClassName(table.Name))ResultModel>(
-                this.baseUrl,
-                {
-                    params: params
-                }
-            ).toPromise();
+            const result = await lastValueFrom(
+                this.http.get<@(ToClassName(table.Name))ResultModel>(this.baseUrl, { params }) // eslint-disable-line max-len
+            );
             const total = result.total ?? 0;
             const data = result.data ?? [];
             this.total.next(total);
@@ -90,10 +87,9 @@ export class @(ToClassName(table.Name))Service {
         model: @(ToClassName(table.Name))Model
     ): Promise<@(ToClassName(table.Name))Model | undefined> {
         try {
-            const result = await this.http.post<@(ToClassName(table.Name))Model>(
-                this.baseUrl,
-                model
-            ).toPromise();
+            const result = await lastValueFrom(
+                this.http.post<@(ToClassName(table.Name))Model>(this.baseUrl, model) // eslint-disable-line max-len
+            );
             return result;
         }
         catch (ex) {
@@ -108,9 +104,9 @@ export class @(ToClassName(table.Name))Service {
     @($"/** 获取指定的{table.GetSummary()} */")
     public async getById(id: string): Promise<@(ToClassName(table.Name))Model | undefined> {
         try {
-            const result = await this.http.get<@(ToClassName(table.Name))Model>(
-                `${this.baseUrl}/${id}`
-            ).toPromise();
+            const result = await lastValueFrom(
+                this.http.get<@(ToClassName(table.Name))Model>(`${this.baseUrl}/${id}`) // eslint-disable-line max-len
+            );
             return result;
         }
         catch (ex) {
@@ -129,9 +125,9 @@ export class @(ToClassName(table.Name))Service {
             return false;
         }
         try {
-            await this.http.delete(
-                `${this.baseUrl}/${id}`
-            ).toPromise();
+            await lastValueFrom(
+                this.http.delete(`${this.baseUrl}/${id}`) // eslint-disable-line max-len
+            );
             return true;
         }
         catch (ex) {
@@ -149,10 +145,9 @@ export class @(ToClassName(table.Name))Service {
         model: @(ToClassName(table.Name))Model
     ): Promise<@(ToClassName(table.Name))Model | undefined> {
         try {
-            const result = await this.http.put<@(ToClassName(table.Name))Model>(
-                `${this.baseUrl}/${id}`,
-                model
-            ).toPromise();
+            const result = await lastValueFrom(
+                this.http.put<@(ToClassName(table.Name))Model>(`${this.baseUrl}/${id}`, model) // eslint-disable-line max-len
+            );
             return result;
         }
         catch (ex) {

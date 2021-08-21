@@ -35,7 +35,7 @@
         <form class="p-2 bg-light">
           <div class="form-row">
             <div class="col-6">
-              <div class="row no-gutters align-items-center">
+              <div class="row g-0 align-items-center">
                 <label for="pageSize" class="col-auto col-form-label col-form-label-sm">
                   显示：
                 </label>
@@ -59,7 +59,7 @@
               </div>
             </div>
             <div class="col-6">
-              <div class="row no-gutters">
+              <div class="row g-0">
                 <div class="col-6">
                   <span class="text-muted">其它工具栏</span>
                 </div>
@@ -83,24 +83,24 @@
             </thead>
             <tbody *ngIf="(vm.data | async) as data">
               <tr *ngFor="let item of data; let i = index;">
-                <th scope="row" class="text-right text-muted">{{i+1+vm.searchModel.skip}}</th>
+                <th scope="row" class="text-end text-muted">{{i+1+vm.searchModel.skip}}</th>
 @foreach (var col in table.Columns) {
-                <td class='@($"{(ConvertTsType(col) == "number" ? "text-right" : "text-left")}")'>{{item.@(col.ConvertedName)}}</td>
+                <td class='@($"{(ConvertTsType(col) == "number" ? "text-end" : "text-start")}")'>{{item.@(col.ConvertedName)}}</td>
 }
                 <td class="text-center">
                   <div class="btn-group btn-group-sm">
                     <button *ngIf="info.privileges['@(table.Name).read_by_id']"
-                      class="btn btn-outline-secondary" ngbTooltip="详情" placement="top" [openDelay]="300"
+                      class="btn btn-outline-secondary" ngbTooltip="详情" placement="top" [openDelay]="300" container="body"
                       (click)="showDetail(item.id, false)">
                       <svg-icon path="bi/info-square"></svg-icon>
                     </button>
                     <button *ngIf="info.privileges['@(table.Name).update']"
-                      class="btn btn-outline-secondary" ngbTooltip="编辑" placement="top" [openDelay]="300"
+                      class="btn btn-outline-secondary" ngbTooltip="编辑" placement="top" [openDelay]="300" container="body"
                       (click)="showDetail(item.id, true)">
                       <svg-icon path="bi/pencil-square"></svg-icon>
                     </button>
                     <button *ngIf="info.privileges['@(table.Name).delete']"
-                        class="btn btn-outline-secondary" ngbTooltip="删除" placement="top" [openDelay]="300"
+                        class="btn btn-outline-secondary" ngbTooltip="删除" placement="top" [openDelay]="300" container="body"
                       (click)="delete(item.id)">
                       <svg-icon path="bi/trash"></svg-icon>
                     </button>
@@ -111,7 +111,7 @@
           </table>
         </div>
         <div class="card-footer">
-          <div *ngIf="(vm.data | async) as data" class="row no-gutters">
+          <div *ngIf="(vm.data | async) as data" class="row g-0">
             <div class="col-6 d-flex align-items-center">
               <div [class]="data.length > 0 ? 'text-muted' : 'text-warning'">
                 <ng-container *ngIf="data.length > 0;else emptyTpl">

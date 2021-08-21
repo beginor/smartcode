@@ -26,12 +26,12 @@
   <div class="card-body">
 @foreach (var col in table.Columns) {
     if (col.LanguageType == "boolean") {
-    <div class="form-group">
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input"
+    <div class="mb-3">
+      <div class="form-check form-switch">
+        <input type="checkbox" class="form-check-input"
           id="@(col.ConvertedName)" name="@(col.ConvertedName)"
           [(ngModel)]="model.@(col.ConvertedName)" [disabled]="!editable">
-        <label class="custom-control-label text-muted"
+        <label class="form-check-label text-muted"
           for="@(col.ConvertedName)">
           @col.GetSummary()
         </label>
@@ -39,7 +39,7 @@
     </div>
     }
     else {
-    <div class="form-group">
+    <div class="mb-3">
       <label class="form-label text-muted" for="@(col.ConvertedName)">@col.GetSummary() @if (!col.IsNullable) { <i class="text-danger">*</i> }</label>
       @if (col.IsNullable) {
       <input class="form-control" type="text" id="@(col.ConvertedName)" name="@(col.ConvertedName)"
