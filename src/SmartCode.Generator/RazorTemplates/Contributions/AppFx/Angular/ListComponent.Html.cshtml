@@ -41,7 +41,7 @@
                 </label>
                 <div class="col-auto">
                   <select id="pageSize" name="pageSize"
-                    class="form-control form-control-sm"
+                    class="form-select form-select-sm"
                     [(ngModel)]="vm.searchModel.take"
                     (change)="vm.onPageSizeChange()">
                     <option [value]="10">10</option>
@@ -60,10 +60,10 @@
             </div>
             <div class="col-6">
               <div class="row g-0">
-                <div class="col-6">
+                <div class="col">
                   <span class="text-muted">其它工具栏</span>
                 </div>
-                <div class="col-6">
+                <div class="col">
                   <span class="text-muted">其它工具栏</span>
                 </div>
               </div>
@@ -74,9 +74,9 @@
           <table class="table table-striped mb-0">
             <thead>
               <tr>
-                <th scope="col" class="text-center text-nowrap text-muted">#</th>
+                <th scope="col" class="text-end text-nowrap text-muted">#</th>
 @foreach (var col in table.Columns) {
-                <th scope="col" class="text-center text-nowrap text-muted">@col.GetSummary()</th>
+                <th scope="col" class="text-start text-nowrap text-muted">@col.GetSummary()</th>
 }
                 <th scope="col" class="text-center text-nowrap text-muted">操作</th>
               </tr>
