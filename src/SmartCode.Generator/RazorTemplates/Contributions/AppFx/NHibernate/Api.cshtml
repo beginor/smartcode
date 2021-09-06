@@ -57,7 +57,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
             catch (Exception ex) {
                 logger.LogError(ex, $"Can not search @(table.Name) with {model.ToJson()} .");
-                return this.InternalServerError(ex.GetOriginalMessage());
+                return this.InternalServerError(ex);
             }
         }
 
@@ -75,7 +75,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
             catch (Exception ex) {
                 logger.LogError(ex, $"Can not save {model.ToJson()} to @(table.Name).");
-                return this.InternalServerError(ex.GetOriginalMessage());
+                return this.InternalServerError(ex);
             }
         }
 
@@ -92,7 +92,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
             catch (Exception ex) {
                 logger.LogError(ex, $"Can not delete @(table.Name) by id {id} .");
-                return this.InternalServerError(ex.GetOriginalMessage());
+                return this.InternalServerError(ex);
             }
         }
 
@@ -114,7 +114,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
             catch (Exception ex) {
                 logger.LogError(ex, $"Can not get @(table.Name) by id {id}.");
-                return this.InternalServerError(ex.GetOriginalMessage());
+                return this.InternalServerError(ex);
             }
         }
 
@@ -140,7 +140,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers {
             }
             catch (Exception ex) {
                 logger.LogError(ex, $"Can not update @(table.Name) by id {id} with {model.ToJson()} .");
-                return this.InternalServerError(ex.GetOriginalMessage());
+                return this.InternalServerError(ex);
             }
         }
 
