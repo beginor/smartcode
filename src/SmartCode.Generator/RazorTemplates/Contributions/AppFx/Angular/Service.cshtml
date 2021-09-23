@@ -57,7 +57,7 @@ export class @(ToClassName(table.Name))Service {
             this.data.next(data);
             this.showPagination = total > data.length;
         }
-        catch (ex) {
+        catch (ex: unknown) {
             this.errorHandler.handleError(ex);
             this.total.next(0);
             this.data.next([]);
@@ -92,7 +92,7 @@ export class @(ToClassName(table.Name))Service {
             );
             return result;
         }
-        catch (ex) {
+        catch (ex: unknown) {
             this.errorHandler.handleError(ex);
             this.ui.showAlert(
                 { type: 'danger', message: @($"'创建{table.GetSummary()}出错！'") }
@@ -109,7 +109,7 @@ export class @(ToClassName(table.Name))Service {
             );
             return result;
         }
-        catch (ex) {
+        catch (ex: unknown) {
             this.errorHandler.handleError(ex);
             this.ui.showAlert(
                 { type: 'danger', message: @($"'获取指定的{table.GetSummary()}出错！'") }
@@ -130,7 +130,7 @@ export class @(ToClassName(table.Name))Service {
             );
             return true;
         }
-        catch (ex) {
+        catch (ex: unknown) {
             this.errorHandler.handleError(ex);
             this.ui.showAlert(
                 { type: 'danger', message: @($"'删除{table.GetSummary()}出错！'") }
@@ -150,7 +150,7 @@ export class @(ToClassName(table.Name))Service {
             );
             return result;
         }
-        catch (ex) {
+        catch (ex: unknown) {
             this.errorHandler.handleError(ex);
             this.ui.showAlert(
                 { type: 'danger', message: @($"'更新{table.GetSummary()}出错！'") }
