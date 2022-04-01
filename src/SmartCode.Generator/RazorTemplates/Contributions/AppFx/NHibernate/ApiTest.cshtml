@@ -10,16 +10,15 @@
 using @(project.Author).@(project.Module).Api.Controllers;
 using NUnit.Framework;
 
-namespace @(project.Author).@(project.Module).@(buildTask.Module).Api {
+namespace @(project.Author).@(project.Module).@(buildTask.Module).Api;
 
-    [TestFixture]
-    public class @(table.ConvertedName)ControllerTest : BaseTest<@(table.ConvertedName)Controller> {
+[TestFixture]
+public class @(table.ConvertedName)ControllerTest : BaseTest<@(table.ConvertedName)Controller> {
 
-        [Test]
-        public void _01_CanResolveTarget() {
-            Assert.IsNotNull(Target);
-        }
-
+    [Test]
+    public void _01_CanResolveTarget() {
+        Assert.IsNotNull(Target);
     }
 
 }
+

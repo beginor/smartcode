@@ -20,83 +20,81 @@ using System;
 using Beginor.AppFx.Core;
 using NHibernate.Mapping.Attributes;
 
-namespace @(project.Author).@(project.Module).@(buildTask.Module).Entities {
+namespace @(project.Author).@(project.Module).@(buildTask.Module).Entities;
 
-    /// <summary>@table.GetSummary()</summary>
-    [Class(@if (!string.IsNullOrEmpty(schema)) { <text>Schema = "@schema", </text> }Table = "@table.Name"@if (table.Columns.Any(c => c.Name.Equals("is_deleted"))) {<text>, Where = "is_deleted = false"</text>})]
-    public partial class @(table.ConvertedName) @if (pkCount == 1) {<text>: BaseEntity<@firstPk.LanguageType></text>} {
+/// <summary>@table.GetSummary()</summary>
+[Class(@if (!string.IsNullOrEmpty(schema)) { <text>Schema = "@schema", </text> }Table = "@table.Name"@if (table.Columns.Any(c => c.Name.Equals("is_deleted"))) {<text>, Where = "is_deleted = false"</text>})]
+public partial class @(table.ConvertedName) @if (pkCount == 1) {<text>: BaseEntity<@firstPk.LanguageType></text>} {
 @if (pkCount > 1) {
 <text>
-        /// <summary>CompositeId for @string.Join(",", pkCols.Select(pk => pk.Name).ToArray())</summary>
-        [CompositeId]</text>
-    foreach (var col in pkCols) {
+    /// <summary>CompositeId for @string.Join(",", pkCols.Select(pk => pk.Name).ToArray())</summary>
+    [CompositeId]</text>
+foreach (var col in pkCols) {
 <text>
-        [KeyProperty(Name = "@col.ConvertedName", Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)" @if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]</text>
-    }
+    [KeyProperty(Name = "@col.ConvertedName", Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)" @if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]</text>
+}
 <text>
-        protected virtual int CompositeId => GetHashCode();
+    protected virtual int CompositeId => GetHashCode();
 </text>
-    foreach (var col in pkCols) {
+foreach (var col in pkCols) {
 <text>
-        /// <summary>@col.GetSummary()</summary>
-        public virtual @ConvertCsType(col) @col.ConvertedName { get; set; }
+    /// <summary>@col.GetSummary()</summary>
+    public virtual @ConvertCsType(col) @col.ConvertedName { get; set; }
 </text>
-    }
+}
 } else {
 <text>
-        /// <summary>@firstPk.GetSummary()</summary>
-        [Id(Name = "@firstPk.ConvertedName", Column = "@firstPk.Name", Type = "@GetHbmType(firstPk.LanguageType)", Generator = "@GetGeneratorClass(firstPk)")]
-        public override @ConvertCsType(firstPk) @firstPk.ConvertedName { get { return base.Id; } set { base.Id = value; } }
+    /// <summary>@firstPk.GetSummary()</summary>
+    [Id(Name = "@firstPk.ConvertedName", Column = "@firstPk.Name", Type = "@GetHbmType(firstPk.LanguageType)", Generator = "@GetGeneratorClass(firstPk)")]
+    public override @ConvertCsType(firstPk) @firstPk.ConvertedName { get { return base.Id; } set { base.Id = value; } }
 </text>
 }
 @foreach (var col in normalCols) {
 <text>
-        /// <summary>@col.GetSummary()</summary>
-        [Property(Name = "@col.ConvertedName", Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)", NotNull = @((!col.IsNullable).ToString().ToLower())@if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]
-        public virtual @ConvertCsType(col) @col.ConvertedName { get; set; }
+    /// <summary>@col.GetSummary()</summary>
+    [Property(Name = "@col.ConvertedName", Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)", NotNull = @((!col.IsNullable).ToString().ToLower())@if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]
+    public virtual @ConvertCsType(col) @col.ConvertedName { get; set; }
 </text>
 }
 @if (pkCount > 1) {
 <text>
-        public override int GetHashCode() {
-            unchecked {
-                int hashCode;</text>
-        for (var i = 0; i < pkCols.Length; i++) {
-            if (i == 0) {
+    public override int GetHashCode() {
+        unchecked {
+            int hashCode;</text>
+    for (var i = 0; i < pkCols.Length; i++) {
+        if (i == 0) {
 <text>
-                hashCode = @(pkCols[i].ConvertedName).GetHashCode();</text>
-            }
-            else {
-<text>
-                hashCode = (hashCode * 397) ^ @(pkCols[i].ConvertedName).GetHashCode();</text>
-            }
+            hashCode = @(pkCols[i].ConvertedName).GetHashCode();</text>
         }
+        else {
 <text>
-                return hashCode;
-            }
-        }</text>
+            hashCode = (hashCode * 397) ^ @(pkCols[i].ConvertedName).GetHashCode();</text>
+        }
+    }
 <text>
-        public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) {
-                return false;
-            }
-            if (ReferenceEquals(this, obj)) {
-                return true;
-            }
-            if (obj.GetType() != this.GetType()) {
-                return false;
-            }
-            return Equals((@table.ConvertedName)obj);
+            return hashCode;
         }
-
-        public virtual bool Equals(@table.ConvertedName other) {
-            if (other == null){
-                return false;
-            }
-            return this.GetHashCode() == other.GetHashCode();
+    }</text>
+<text>
+    public override bool Equals(object obj) {
+        if (ReferenceEquals(null, obj)) {
+            return false;
         }
-</text>
-}
+        if (ReferenceEquals(this, obj)) {
+            return true;
+        }
+        if (obj.GetType() != this.GetType()) {
+            return false;
+        }
+        return Equals((@table.ConvertedName)obj);
     }
 
+    public virtual bool Equals(@table.ConvertedName other) {
+        if (other == null){
+            return false;
+        }
+        return this.GetHashCode() == other.GetHashCode();
+    }
+</text>
+}
 }

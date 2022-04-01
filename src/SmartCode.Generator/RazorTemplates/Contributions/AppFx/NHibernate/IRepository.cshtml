@@ -16,16 +16,15 @@ using System.Threading.Tasks;
 using Beginor.AppFx.Core;
 using @(project.Author).@(project.Module).Models;
 
-namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories {
+namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories;
 
-    /// <summary>@table.GetSummary() 仓储接口</summary>
-    public partial interface I@(table.ConvertedName)Repository : IRepository<@(table.ConvertedName)Model, @(ConvertCsType(firstPk))> {
+/// <summary>@table.GetSummary() 仓储接口</summary>
+public partial interface I@(table.ConvertedName)Repository : IRepository<@(table.ConvertedName)Model, @(ConvertCsType(firstPk))> {
 
-        /// <summary>搜索 @table.GetSummary() ，返回分页结果。</summary>
-        Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(
-            @(table.ConvertedName)SearchModel model
-        );
-
-    }
+    /// <summary>搜索 @table.GetSummary() ，返回分页结果。</summary>
+    Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(
+        @(table.ConvertedName)SearchModel model
+    );
 
 }
+

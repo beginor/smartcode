@@ -24,42 +24,40 @@ using NHibernate.Linq;
 using @(project.Author).@(project.Module).@(buildTask.Module).Entities;
 using @(project.Author).@(project.Module).Models;
 
-namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories {
+namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories;
 
-    /// <summary>@table.GetSummary()仓储实现</summary>
-    public partial class @(table.ConvertedName)Repository : HibernateRepository<@(table.ConvertedName), @(table.ConvertedName)Model, @(ConvertCsType(firstPk))>, I@(table.ConvertedName)Repository {
+/// <summary>@table.GetSummary()仓储实现</summary>
+public partial class @(table.ConvertedName)Repository : HibernateRepository<@(table.ConvertedName), @(table.ConvertedName)Model, @(ConvertCsType(firstPk))>, I@(table.ConvertedName)Repository {
 
-        public @(table.ConvertedName)Repository(ISession session, IMapper mapper) : base(session, mapper) { }
+    public @(table.ConvertedName)Repository(ISession session, IMapper mapper) : base(session, mapper) { }
 
-        /// <summary>搜索 @table.GetSummary() ，返回分页结果。</summary>
-        public async Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(
-            @(table.ConvertedName)SearchModel model
-        ) {
-            var query = Session.Query<@(table.ConvertedName)>();
-            // todo: 添加自定义查询；
-            var total = await query.LongCountAsync();
-            var data = await query.OrderByDescending(e => e.Id)
-                .Skip(model.Skip).Take(model.Take)
-                .ToListAsync();
-            return new PaginatedResponseModel<@(table.ConvertedName)Model> {
-                Total = total,
-                Data = Mapper.Map<IList<@(table.ConvertedName)Model>>(data),
-                Skip = model.Skip,
-                Take = model.Take
-            };
-        }
-
-@if (table.Columns.Any(c => c.Name.Equals("is_deleted"))) {<text>
-        public override async Task DeleteAsync(long id, CancellationToken token = default) {
-            var entity = Session.Get<@table.ConvertedName>(id);
-            if (entity != null) {
-                entity.IsDeleted = true;
-                await Session.SaveAsync(entity, token);
-                await Session.FlushAsync();
-            }
-        }
-</text>
-}
+    /// <summary>搜索 @table.GetSummary() ，返回分页结果。</summary>
+    public async Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(
+        @(table.ConvertedName)SearchModel model
+    ) {
+        var query = Session.Query<@(table.ConvertedName)>();
+        // todo: 添加自定义查询；
+        var total = await query.LongCountAsync();
+        var data = await query.OrderByDescending(e => e.Id)
+            .Skip(model.Skip).Take(model.Take)
+            .ToListAsync();
+        return new PaginatedResponseModel<@(table.ConvertedName)Model> {
+            Total = total,
+            Data = Mapper.Map<IList<@(table.ConvertedName)Model>>(data),
+            Skip = model.Skip,
+            Take = model.Take
+        };
     }
 
+@if (table.Columns.Any(c => c.Name.Equals("is_deleted"))) {<text>
+    public override async Task DeleteAsync(long id, CancellationToken token = default) {
+        var entity = Session.Get<@table.ConvertedName>(id);
+        if (entity != null) {
+            entity.IsDeleted = true;
+            await Session.SaveAsync(entity, token);
+            await Session.FlushAsync();
+        }
+    }
+</text>
+}
 }
