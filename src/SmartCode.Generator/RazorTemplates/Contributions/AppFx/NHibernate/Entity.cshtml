@@ -45,14 +45,14 @@ foreach (var col in pkCols) {
 } else {
 <text>
     /// <summary>@firstPk.GetSummary()</summary>
-    [Id(Name = "@firstPk.ConvertedName", Column = "@firstPk.Name", Type = "@GetHbmType(firstPk.LanguageType)", Generator = "@GetGeneratorClass(firstPk)")]
+    [Id(Name = nameof(@(firstPk.ConvertedName)), Column = "@firstPk.Name", Type = "@GetHbmType(firstPk.LanguageType)", Generator = "@GetGeneratorClass(firstPk)")]
     public override @ConvertCsType(firstPk) @firstPk.ConvertedName { get { return base.Id; } set { base.Id = value; } }
 </text>
 }
 @foreach (var col in normalCols) {
 <text>
     /// <summary>@col.GetSummary()</summary>
-    [Property(Name = "@col.ConvertedName", Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)", NotNull = @((!col.IsNullable).ToString().ToLower())@if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]
+    [Property(Name = nameof(@(col.ConvertedName)), Column = "@col.Name", Type = "@GetHbmType(col.LanguageType)", NotNull = @((!col.IsNullable).ToString().ToLower())@if(col.LanguageType == "string") {<text>, Length = @col.DataLength</text>})]
     public virtual @ConvertCsType(col) @col.ConvertedName { get; set; }
 </text>
 }
