@@ -1,6 +1,6 @@
 ﻿@using SmartCode
 @using SmartCode.Db
-@model BuildContext
+@inherits SmartCode.TemplateEngine.Impl.RazorCoreTemplate<BuildContext>
 @{
     var table = Model.GetCurrentTable();
 }
@@ -10,4 +10,3 @@
     Select Count(1) From @table.Name T
     <Include RefId="QueryParams" />
 </Statement>
-

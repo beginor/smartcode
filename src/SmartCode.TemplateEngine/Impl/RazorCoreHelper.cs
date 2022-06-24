@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using RazorEngineCore;
@@ -19,16 +20,17 @@ namespace SmartCode.TemplateEngine.Impl {
             if (!File.Exists(viewPath)) {
                 throw new FileNotFoundException($"Razor file {viewPath} does not exists!");
             }
-            System.Console.WriteLine($"Compile and run file: {viewPath}");
+            Console.WriteLine($"Compile and run file: {viewPath}");
             var template = engine.Compile<RazorCoreTemplate<BuildContext>>(
                 File.ReadAllText(viewPath),
                 builder => {
-                    builder.AddAssemblyReferenceByName("SmartCode");
-                    builder.AddAssemblyReferenceByName("SmartCode.App");
-                    builder.AddAssemblyReferenceByName("SmartCode.Db");
-                    builder.AddAssemblyReferenceByName("SmartCode.ETL");
-                    builder.AddAssemblyReferenceByName("SmartCode.Generator");
-                    builder.AddAssemblyReferenceByName("SmartCode.TemplateEngine");
+                    var domain = AppDomain.CurrentDomain.BaseDirectory;
+                    var dirInfo = new DirectoryInfo(domain);
+                    var dllFiles = dirInfo.EnumerateFiles("*.dll");
+                    foreach (var dllFile in dllFiles) {
+                        var asmName = dllFile.Name.Substring(0, dllFile.Name.Length - dllFile.Extension.Length);
+                        builder.AddAssemblyReferenceByName(asmName);
+                    }
                 }
             );
             return template.RunAsync(instance => {
