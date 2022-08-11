@@ -19,7 +19,7 @@ public partial class @(table.ConvertedName + "Model") : StringEntity {
 
 @foreach (var col in normalColumns) {
     @(PadLeft(4) + $"/// <summary>{col.GetSummary()}</summary>{NewLine()}")
-    @if (!col.IsNullable) { @(PadLeft(8) + $"[Required(ErrorMessage = \"{col.GetSummary()} 必须填写！\")]{NewLine()}") }
+    @if (!col.IsNullable) { @(PadLeft(4) + $"[Required(ErrorMessage = \"{col.GetSummary()} 必须填写！\")]{NewLine()}") }
     @(PadLeft(4) + $"public {ConvertCsModelType(col)} {col.ConvertedName} {{ get; set; }}{NewLine()}")
 }
 
