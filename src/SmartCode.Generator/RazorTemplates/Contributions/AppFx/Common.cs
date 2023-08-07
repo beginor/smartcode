@@ -19,6 +19,11 @@ namespace SmartCode.Generator.RazorTemplates.Contributions.AppFx {
         }
 
         public static string ConvertCsType(Column column) {
+            // var langType = column.LanguageType;
+            // if (column.IsNullable) {
+            //     langType += "?";
+            // }
+            // return langType;
             if (string.IsNullOrEmpty(column.LanguageType)) {
                 return "NAType";
             }
