@@ -55,7 +55,7 @@ public partial class @(table.ConvertedName)Repository : HibernateRepository<@(ta
         if (entity != null) {
             entity.IsDeleted = true;
             await Session.SaveAsync(entity, token);
-            await Session.FlushAsync();
+            await Session.FlushAsync(token);
         }
     }
 </text>
