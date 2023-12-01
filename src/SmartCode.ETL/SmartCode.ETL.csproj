@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SmartSql.Bulk.MySql" Version="4.1.64" />
-    <PackageReference Include="SmartSql.Bulk.PostgreSql" Version="4.1.64" />
-    <PackageReference Include="SmartSql.Bulk.SqlServer" Version="4.1.64" />
+    <PackageReference Include="SmartSql.Bulk.MySql" Version="4.1.67" />
+    <PackageReference Include="SmartSql.Bulk.PostgreSql" Version="4.1.67" />
+    <PackageReference Include="SmartSql.Bulk.SqlServer" Version="4.1.67" />
   </ItemGroup>
 
   <ItemGroup>
