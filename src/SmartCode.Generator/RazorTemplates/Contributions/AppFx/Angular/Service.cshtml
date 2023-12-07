@@ -45,7 +45,9 @@ export class @(ToClassName(table.Name))Service {
         for (const key in this.searchModel) {
             if (this.searchModel.hasOwnProperty(key)) {
                 const val = this.searchModel[key] as string;
-                params = params.set(key, val);
+                if (val) {
+                    params = params.set(key, val);
+                }
             }
         }
         this.loading = true;

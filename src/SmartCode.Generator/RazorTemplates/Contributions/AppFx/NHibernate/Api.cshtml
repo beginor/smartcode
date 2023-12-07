@@ -24,8 +24,8 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers;
 [Route("api/@ToPath(table.Name)")]
 public class @(table.ConvertedName)Controller : Controller {
 
-    private ILogger<@(table.ConvertedName)Controller> logger;
-    private I@(table.ConvertedName)Repository repository;
+    private readonly ILogger<@(table.ConvertedName)Controller> logger;
+    private readonly I@(table.ConvertedName)Repository repository;
 
     public @(table.ConvertedName)Controller(
         ILogger<@(table.ConvertedName)Controller> logger,
