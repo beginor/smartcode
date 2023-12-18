@@ -22,28 +22,14 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers;
 /// <summary>@table.GetSummary() 服务接口</summary>
 [ApiController]
 [Route("api/@ToPath(table.Name)")]
-public class @(table.ConvertedName)Controller : Controller {
-
-    private readonly ILogger<@(table.ConvertedName)Controller> logger;
-    private readonly I@(table.ConvertedName)Repository repository;
-
-    public @(table.ConvertedName)Controller(
-        ILogger<@(table.ConvertedName)Controller> logger,
-        I@(table.ConvertedName)Repository repository
-    ) {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
-    }
-
-    protected override void Dispose(bool disposing) {
-        if (disposing) {
-            // dispose managed resource here;
-        }
-        base.Dispose(disposing);
-    }
+public class @(table.ConvertedName)Controller(
+    ILogger<@(table.ConvertedName)Controller> logger,
+    I@(table.ConvertedName)Repository repository
+) : Controller {
 
     /// <summary>搜索 @(table.GetSummary()) ， 分页返回结果</summary>
     /// <response code="200">成功, 分页返回结果</response>
+    /// <response code="400">客户端发送错误请求</response>
     /// <response code="500">服务器内部错误</response>
     [HttpGet("")]
     [Authorize("@(table.Name).read")]
@@ -54,14 +40,42 @@ public class @(table.ConvertedName)Controller : Controller {
             var result = await repository.SearchAsync(model);
             return result;
         }
+        catch (InvalidOperationException ex) {
+            logger.LogWarning(ex.GetOriginalMessage());
+            return BadRequest();
+        }
         catch (Exception ex) {
             logger.LogError(ex, $"Can not search @(table.Name) with {model.ToJson()} .");
             return this.InternalServerError(ex);
         }
     }
 
+    /// <summary>
+    /// 获取指定的 @(table.GetSummary())
+    /// </summary>
+    /// <response code="200">返回 @(table.GetSummary()) 信息</response>
+    /// <response code="400">客户端发送错误请求</response>
+    /// <response code="500">服务器内部错误</response>
+    [HttpGet("{id:long}")]
+    [Authorize("@(table.Name).read_by_id")]
+    public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(long id) {
+        try {
+            var result = await repository.GetByIdAsync(id);
+            return result;
+        }
+        catch (InvalidOperationException ex) {
+            logger.LogWarning(ex.GetOriginalMessage());
+            return BadRequest();
+        }
+        catch (Exception ex) {
+            logger.LogError(ex, $"Can not get @(table.Name) by id {id}.");
+            return this.InternalServerError(ex);
+        }
+    }
+
     /// <summary> 创建 @(table.GetSummary()) </summary>
     /// <response code="200">创建 @(table.GetSummary()) 成功</response>
+    /// <response code="400">客户端发送错误请求</response>
     /// <response code="500">服务器内部错误</response>
     [HttpPost("")]
     [Authorize("@(table.Name).create")]
@@ -72,14 +86,45 @@ public class @(table.ConvertedName)Controller : Controller {
             await repository.SaveAsync(model);
             return model;
         }
+        catch (InvalidOperationException ex) {
+            logger.LogWarning(ex.GetOriginalMessage());
+            return BadRequest();
+        }
         catch (Exception ex) {
             logger.LogError(ex, $"Can not save {model.ToJson()} to @(table.Name).");
             return this.InternalServerError(ex);
         }
     }
 
+    /// <summary>
+    /// 更新 @(table.GetSummary())
+    /// </summary>
+    /// <response code="200">更新成功，返回 @(table.GetSummary()) 信息</response>
+    /// <response code="400">客户端发送错误请求</response>
+    /// <response code="500">服务器内部错误</response>
+    [HttpPut("{id:long}")]
+    [Authorize("@(table.Name).update")]
+    public async Task<ActionResult<@(table.ConvertedName)Model>> Update(
+        [FromRoute]long id,
+        [FromBody]@(table.ConvertedName)Model model
+    ) {
+        try {
+            await repository.UpdateAsync(id, model);
+            return model;
+        }
+        catch (InvalidOperationException ex) {
+            logger.LogWarning(ex.GetOriginalMessage());
+            return BadRequest();
+        }
+        catch (Exception ex) {
+            logger.LogError(ex, $"Can not update @(table.Name) by id {id} with {model.ToJson()} .");
+            return this.InternalServerError(ex);
+        }
+    }
+
     /// <summary>删除 @(table.GetSummary()) </summary>
     /// <response code="204">删除 @(table.GetSummary()) 成功</response>
+    /// <response code="400">客户端发送错误请求</response>
     /// <response code="500">服务器内部错误</response>
     [HttpDelete("{id:long}")]
     [ProducesResponseType(204)]
@@ -89,56 +134,12 @@ public class @(table.ConvertedName)Controller : Controller {
             await repository.DeleteAsync(id);
             return NoContent();
         }
+        catch (InvalidOperationException ex) {
+            logger.LogWarning(ex.GetOriginalMessage());
+            return BadRequest();
+        }
         catch (Exception ex) {
             logger.LogError(ex, $"Can not delete @(table.Name) by id {id} .");
-            return this.InternalServerError(ex);
-        }
-    }
-
-    /// <summary>
-    /// 获取指定的 @(table.GetSummary())
-    /// </summary>
-    /// <response code="200">返回 @(table.GetSummary()) 信息</response>
-    /// <response code="404"> @(table.GetSummary()) 不存在</response>
-    /// <response code="500">服务器内部错误</response>
-    [HttpGet("{id:long}")]
-    [Authorize("@(table.Name).read_by_id")]
-    public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(long id) {
-        try {
-            var result = await repository.GetByIdAsync(id);
-            if (result == null) {
-                return NotFound();
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            logger.LogError(ex, $"Can not get @(table.Name) by id {id}.");
-            return this.InternalServerError(ex);
-        }
-    }
-
-    /// <summary>
-    /// 更新 @(table.GetSummary())
-    /// </summary>
-    /// <response code="200">更新成功，返回 @(table.GetSummary()) 信息</response>
-    /// <response code="404"> @(table.GetSummary()) 不存在</response>
-    /// <response code="500">服务器内部错误</response>
-    [HttpPut("{id:long}")]
-    [Authorize("@(table.Name).update")]
-    public async Task<ActionResult<@(table.ConvertedName)Model>> Update(
-        [FromRoute]long id,
-        [FromBody]@(table.ConvertedName)Model model
-    ) {
-        try {
-            var exists = await repository.ExistAsync(id);
-            if (!exists) {
-                return NotFound();
-            }
-            await repository.UpdateAsync(id, model);
-            return model;
-        }
-        catch (Exception ex) {
-            logger.LogError(ex, $"Can not update @(table.Name) by id {id} with {model.ToJson()} .");
             return this.InternalServerError(ex);
         }
     }
