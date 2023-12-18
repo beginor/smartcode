@@ -27,7 +27,7 @@ public class @(table.ConvertedName)Controller(
     I@(table.ConvertedName)Repository repository
 ) : Controller {
 
-    /// <summary>搜索 @(table.GetSummary()) ， 分页返回结果</summary>
+    /// <summary>搜索 @(table.GetSummary()) , 分页返回结果</summary>
     /// <response code="200">成功, 分页返回结果</response>
     /// <response code="400">客户端发送错误请求</response>
     /// <response code="500">服务器内部错误</response>
@@ -50,9 +50,7 @@ public class @(table.ConvertedName)Controller(
         }
     }
 
-    /// <summary>
-    /// 获取指定的 @(table.GetSummary())
-    /// </summary>
+    /// <summary>获取指定的 @(table.GetSummary())</summary>
     /// <response code="200">返回 @(table.GetSummary()) 信息</response>
     /// <response code="400">客户端发送错误请求</response>
     /// <response code="500">服务器内部错误</response>
