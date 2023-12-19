@@ -22,9 +22,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories;
 public partial interface I@(table.ConvertedName)Repository : IRepository<@(table.ConvertedName)Model, @(ConvertCsType(firstPk))> {
 
     /// <summary>搜索 @table.GetSummary() ，返回分页结果。</summary>
-    Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(
-        @(table.ConvertedName)SearchModel model
-    );
+    Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(@(table.ConvertedName)SearchModel model, CancellationToken token = default);
 
 }
 

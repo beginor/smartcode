@@ -33,7 +33,8 @@ public partial class @(table.ConvertedName)Repository : HibernateRepository<@(ta
 
     /// <summary>搜索 @table.GetSummary() ，返回分页结果。</summary>
     public async Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(
-        @(table.ConvertedName)SearchModel model
+        @(table.ConvertedName)SearchModel model,
+        CancellationToken token = default
     ) {
         var query = Session.Query<@(table.ConvertedName)>();
         // todo: 添加自定义查询；
