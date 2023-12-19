@@ -38,10 +38,10 @@ public partial class @(table.ConvertedName)Repository : HibernateRepository<@(ta
     ) {
         var query = Session.Query<@(table.ConvertedName)>();
         // todo: 添加自定义查询；
-        var total = await query.LongCountAsync();
+        var total = await query.LongCountAsync(token);
         var data = await query.OrderByDescending(e => e.Id)
             .Skip(model.Skip).Take(model.Take)
-            .ToListAsync();
+            .ToListAsync(token);
         return new PaginatedResponseModel<@(table.ConvertedName)Model> {
             Total = total,
             Data = Mapper.Map<IList<@(table.ConvertedName)Model>>(data),
