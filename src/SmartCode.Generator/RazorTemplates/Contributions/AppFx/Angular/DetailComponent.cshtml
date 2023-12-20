@@ -8,7 +8,7 @@
     var table = Model.GetCurrentTable();
 }
 import { Component, OnInit } from '@@angular/core';
-import { NgbActiveOffcanvas } from '@@angular/animations';
+import { NgbActiveOffcanvas } from '@@ng-bootstrap/ng-bootstrap';
 
 import { AccountService } from 'app-shared';
 
@@ -37,9 +37,6 @@ export class DetailComponent implements OnInit {
     }
     public editable = false;
     public model: @(ToClassName(table.Name))Model = { id: '' };
-
-
-    private reloadList = false;
 
     constructor(
         private activeOffcanvas: NgbActiveOffcanvas,

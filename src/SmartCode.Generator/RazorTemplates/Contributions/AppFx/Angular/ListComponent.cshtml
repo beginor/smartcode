@@ -37,13 +37,6 @@ export class ListComponent implements OnInit {
     }
 
     public showDetail(id: string, editable: boolean): void {
-        void this.router.navigate(
-            ['./', id, { editable: editable }],
-            { relativeTo: this.route, skipLocationChange: true }
-        );
-    }
-
-    public delete(id: string): void {
         const ref = this.offcanvas.open(
             DetailComponent,
             { position: 'end', panelClass: 'offcanvas-vw-40' }
@@ -56,7 +49,16 @@ export class ListComponent implements OnInit {
         }).catch(ex => {
             console.log(`offcanvas canceled with reason ${ex}`)
         });
+    }
 
+    public delete(id: string): void {
+        this.vm.delete(id).then(deleted => {
+            if (deleted) {
+                void this.vm.search();
+            }
+        }).catch(ex => {
+            console.log(`offcanvas canceled with reason ${ex}`)
+        });
     }
 
 }
