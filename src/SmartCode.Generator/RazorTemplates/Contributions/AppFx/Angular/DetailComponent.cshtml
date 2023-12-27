@@ -21,7 +21,7 @@ import { @(ToClassName(table.Name))Service, @(ToClassName(table.Name))Model } fr
 })
 export class DetailComponent implements OnInit {
 
-    public id = '';
+    public id = '0';
     public get title(): string {
         let title = '';
         if (this.id === '0') {
@@ -36,7 +36,7 @@ export class DetailComponent implements OnInit {
         return title;
     }
     public editable = false;
-    public model: @(ToClassName(table.Name))Model = { id: '' };
+    public model: @(ToClassName(table.Name))Model = { id: '0' };
 
     constructor(
         private activeOffcanvas: NgbActiveOffcanvas,
