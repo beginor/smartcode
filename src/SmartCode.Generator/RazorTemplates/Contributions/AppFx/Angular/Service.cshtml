@@ -19,14 +19,18 @@ import { UiService } from 'projects/web/src/app/common';
 })
 export class @(ToClassName(table.Name))Service {
 
-    public searchModel: @(ToClassName(table.Name))SearchModel = {
-        skip: 0,
-        take: 10
-    };
     public total = new BehaviorSubject<number>(0);
     public data = new BehaviorSubject<@(ToClassName(table.Name))Model[]>([]);
     public loading = false;
     public showPagination = false;
+
+    public searchModel: @(ToClassName(table.Name))SearchModel = {
+        skip: 0,
+        take: 10
+    };
+
+    public pageSize = 10;
+    public pageIndex = 1;
 
     private baseUrl: string;
 
@@ -41,6 +45,9 @@ export class @(ToClassName(table.Name))Service {
 
     @($"/** 搜索{table.GetSummary()} */")
     public async search(): Promise<void> {
+        this.searchModel.skip = this.pageSize * (this.pageIndex - 1);
+        this.searchModel.take = this.pageSize;
+
         let params = new HttpParams();
         for (const key in this.searchModel) {
             if (this.searchModel.hasOwnProperty(key)) {
@@ -72,18 +79,6 @@ export class @(ToClassName(table.Name))Service {
         finally {
             this.loading = false;
         }
-    }
-
-    @($"/** 更改页码分页查询 */")
-    public async onPageChange(p: number): Promise<void> {
-        this.searchModel.skip = (p - 1) * this.searchModel.take;
-        await this.search();
-    }
-
-    @($"/** 更改分页大小 */")
-    public async onPageSizeChange(): Promise<void> {
-        this.searchModel.skip = 0;
-        await this.search();
     }
 
     @($"/** 创建{table.GetSummary()} */")
@@ -180,6 +175,8 @@ export interface @(ToClassName(table.Name))SearchModel {
     skip: number;
     /** 取多少条记录 */
     take: number;
+    /** 查询关键字 */
+    keywords?: string;
 }
 
 /** @(table.GetSummary()) 搜索结果 */

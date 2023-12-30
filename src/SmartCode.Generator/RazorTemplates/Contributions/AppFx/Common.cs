@@ -82,6 +82,10 @@ namespace SmartCode.Generator.RazorTemplates.Contributions.AppFx {
             return NamingUtil.ToSingular(selector);
         }
 
+        public static string IsRequired(this Column col) {
+            return (!col.IsNullable).ToString().ToLower();
+        }
+
     }
 
 }

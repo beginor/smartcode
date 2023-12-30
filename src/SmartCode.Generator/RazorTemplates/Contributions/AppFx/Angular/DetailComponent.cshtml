@@ -8,7 +8,7 @@
     var table = Model.GetCurrentTable();
 }
 import { Component, OnInit } from '@@angular/core';
-import { NgbActiveOffcanvas } from '@@ng-bootstrap/ng-bootstrap';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 import { AccountService } from 'app-shared';
 
@@ -25,13 +25,13 @@ export class DetailComponent implements OnInit {
     public get title(): string {
         let title = '';
         if (this.id === '0') {
-            title = '新建 (@table.GetSummary())';
+            title = '新建@(table.GetSummary())';
         }
         else if (this.editable) {
-            title = '编辑 (@table.GetSummary())';
+            title = '编辑@(table.GetSummary())';
         }
         else {
-            title = '查看 (@table.GetSummary())';
+            title = '查看@(table.GetSummary())';
         }
         return title;
     }
@@ -39,7 +39,7 @@ export class DetailComponent implements OnInit {
     public model: @(ToClassName(table.Name))Model = { id: '0' };
 
     constructor(
-        private activeOffcanvas: NgbActiveOffcanvas,
+        private drawerRef: NzDrawerRef,
         public account: AccountService,
         public vm: @(ToClassName(table.Name))Service
     ) { }
@@ -54,7 +54,7 @@ export class DetailComponent implements OnInit {
     }
 
     public cancel(): void {
-        this.activeOffcanvas.dismiss('');
+        this.drawerRef.close('');
     }
 
     public async save(): Promise<void> {
@@ -64,7 +64,7 @@ export class DetailComponent implements OnInit {
         else {
             await this.vm.create(this.model);
         }
-        this.activeOffcanvas.close('ok');
+        this.drawerRef.close('ok');
     }
 
 }
