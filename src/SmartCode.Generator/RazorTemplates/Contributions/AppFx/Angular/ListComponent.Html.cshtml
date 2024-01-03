@@ -59,7 +59,7 @@
             (nzQueryParams)="loadData($event)">
             <thead>
               <tr>
-                <th scope="col" class="text-end text-nowrap">#</th>
+                <th scope="col" class="text-end text-nowrap table-row-num-col">#</th>
 @foreach (var col in table.Columns) {
                 <th scope="col" class="text-start text-nowrap">@col.GetSummary()</th>
 }
@@ -75,19 +75,19 @@
                 <td class="text-center">
                   <nz-button-group nzSize="small">
                     <button *ngIf="info.privileges['@(table.Name).read_by_id']"
-                      class="px-2" type="button" nz-button
+                      class="px-2" type="button" nz-button nzType="default"
                       nz-tooltip="详情" nzTooltipPlacement="top"
                       (click)="showDetail(item.id, false)">
                       <svg-icon iconPath="bi/info-square"></svg-icon>
                     </button>
                     <button *ngIf="info.privileges['@(table.Name).update']"
-                      class="px-2" type="button" nz-button
+                      class="px-2" type="button" nz-button nzType="default"
                       nz-tooltip="编辑" nzTooltipPlacement="top"
                       (click)="showDetail(item.id, true)">
                       <svg-icon iconPath="bi/pencil-square"></svg-icon>
                     </button>
                     <button *ngIf="info.privileges['@(table.Name).delete']"
-                      class="px-2" type="button" nz-button
+                      class="px-2" type="button" nz-button nzType="default"
                       nz-tooltip="删除" nzTooltipPlacement="top"
                       (click)="delete(item.id)">
                       <svg-icon iconPath="bi/trash"></svg-icon>
