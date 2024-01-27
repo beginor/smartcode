@@ -21,18 +21,19 @@ import { UiService } from 'projects/web/src/app/common';
 })
 export class @(ToClassName(table.Name))Service {
 
+    public pageSizeOptions = [20, 40, 60, 80, 100, 200];
+    public pageSize = this.pageSizeOptions[0];
+    public pageIndex = 1;
+
+    public searchModel: @(ToClassName(table.Name))SearchModel = {
+        skip: this.pageSize * (this.pageIndex - 1),
+        take: this.pageSize
+    };
+
     public total = new BehaviorSubject<number>(0);
     public data = new BehaviorSubject<@(ToClassName(table.Name))Model[]>([]);
     public loading = false;
     public showPagination = false;
-
-    public searchModel: @(ToClassName(table.Name))SearchModel = {
-        skip: 0,
-        take: 10
-    };
-
-    public pageSize = 10;
-    public pageIndex = 1;
 
     private baseUrl: string;
 

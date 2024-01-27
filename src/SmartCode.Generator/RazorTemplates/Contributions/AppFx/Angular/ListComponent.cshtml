@@ -7,7 +7,7 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
-import { Component, OnInit } from '@@angular/core';
+import { Component } from '@@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -28,10 +28,6 @@ export class ListComponent implements OnInit {
         public account: AccountService,
         public vm: @(ToClassName(table.Name))Service
     ) { }
-
-    public async ngOnInit(): Promise<void> {
-        await this.vm.search();
-    }
 
     public async loadData({
         pageSize = 10,
