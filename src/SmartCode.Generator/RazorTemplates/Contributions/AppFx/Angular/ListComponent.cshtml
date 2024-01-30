@@ -72,7 +72,7 @@ export class ListComponent implements OnInit {
 
     public async clearKeywords(): Promise<void> {
         this.vm.searchModel.keywords = '';
-        await this.vm.search();
+        this.loadData({});
     }
 
 }

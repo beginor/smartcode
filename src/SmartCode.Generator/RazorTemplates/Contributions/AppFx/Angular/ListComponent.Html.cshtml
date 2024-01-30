@@ -21,7 +21,7 @@
           <nz-space>
             <nz-input-group nzSearch [nzAddOnAfter]="suffixIconSearch" *nzSpaceItem>
               <input nz-input type="text" [(ngModel)]="vm.searchModel.keywords"
-                (keyup.enter)="vm.search()"
+                (keyup.enter)="loadData({})"
                 placeholder="输入关键字进行查询@(table.GetSummary())"/>
               <ng-template #suffixIconSearch>
                 <button *ngIf="vm.searchModel.keywords" class="px-2" nz-button type="button" nzSearch
@@ -29,7 +29,7 @@
                   <svg-icon iconPath="bi/x" />
                 </button>
                 <button class="px-2" nz-button type="button" nzSearch
-                  (click)="vm.search()">
+                  (click)="loadData({})">
                   <svg-icon iconPath="bi/search" />
                 </button>
               </ng-template>
@@ -41,7 +41,7 @@
                 <svg-icon class="me-1" iconPath="bi/plus"></svg-icon> 新建(@table.GetSummary())
               </button>
               <button type="button" nz-button nzType="default"
-                (click)="vm.search()">
+                (click)="loadData({})">
                 <svg-icon class="me-1" iconPath="bi/arrow-repeat"></svg-icon> 刷新
               </button>
             </nz-button-group>
