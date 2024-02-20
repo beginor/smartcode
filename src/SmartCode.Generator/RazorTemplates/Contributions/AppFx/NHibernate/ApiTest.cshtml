@@ -17,7 +17,7 @@ public class @(table.ConvertedName)ControllerTest : BaseTest<@(table.ConvertedNa
 
     [Test]
     public void _01_CanResolveTarget() {
-        Assert.IsNotNull(Target);
+        Assert.That(Target, Is.Not.Null);
     }
 
 }
