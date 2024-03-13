@@ -12,6 +12,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { AccountService } from 'app-shared';
+import { UiService } from 'projects/web/src/app/common';
 
 import { @(ToClassName(table.Name))Service } from '../@(ToPath(table.Name)).service';
 import { DetailComponent } from '../detail/detail.component';
@@ -25,9 +26,16 @@ export class ListComponent implements OnInit {
 
     constructor(
         private drawerService: NzDrawerService,
+        public ui: UiService,
         public account: AccountService,
         public vm: @(ToClassName(table.Name))Service
-    ) { }
+    ) {
+        ui.breadcrumbs = [
+            { label: '首页', url: '/' },
+            { label: '请填写面包屑', url: '/' },
+            { label: '@(table.GetSummary())' }
+        ];
+    }
 
     public async loadData({
         pageSize = 10,

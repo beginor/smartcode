@@ -7,11 +7,6 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
-<nz-breadcrumb class="p-3">
-  <nz-breadcrumb-item><a routerLink="/">首页</a></nz-breadcrumb-item>
-  <nz-breadcrumb-item><a routerLink="/">填写合适的面包屑</a></nz-breadcrumb-item>
-  <nz-breadcrumb-item>@(table.GetSummary())</nz-breadcrumb-item>
-<nz-breadcrumb class="p-3">
 <div class="container-fluid">
   <div class="row">
     <div class="col" *ngIf="(account.info | async) as info">
