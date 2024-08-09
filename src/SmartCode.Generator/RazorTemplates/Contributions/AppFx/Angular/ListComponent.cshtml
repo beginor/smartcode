@@ -7,7 +7,7 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
-import { Component } from '@@angular/core';
+import { Component, OnInit } from '@@angular/core';
 import { CommonModule } from '@@angular/common';
 import { FormsModule } from '@@angular/forms';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
@@ -35,15 +35,17 @@ export class ListComponent implements OnInit {
 
     constructor(
         private drawerService: NzDrawerService,
-        public ui: UiService,
-        public account: AccountService,
-        public vm: @(ToClassName(table.Name))Service
-    ) {
-        ui.breadcrumbs = [
+        private ui: UiService,
+        protected account: AccountService,
+        protected vm: @(ToClassName(table.Name))Service
+    ) { }
+
+    public ngOnInit(): void {
+        this.ui.breadcrumbs.set([
             { label: '首页', url: '/' },
             { label: '请填写面包屑', url: '/' },
             { label: '@(table.GetSummary())' }
-        ];
+        ]);
     }
 
     public async loadData({
