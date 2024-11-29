@@ -2,9 +2,16 @@
 @using SmartCode.Generator.Entity
 @using static SmartCode.Generator.RazorTemplates.Contributions.AppFx.Common
 @inherits SmartCode.TemplateEngine.Impl.RazorCoreTemplate<SmartCode.BuildContext>
+@{
+    var project = Model.Project;
+    var build = Model.Build;
+    var table = Model.GetCurrentTable();
+}
 :host {
   display: block;
+  width: 40vw;
   height: 100%;
+  margin: 0;
   padding: 0;
   overflow-x: hidden;
   overflow-y: auto;

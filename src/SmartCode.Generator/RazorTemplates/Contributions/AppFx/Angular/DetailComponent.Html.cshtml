@@ -27,7 +27,7 @@
     <nz-form-item>
     @if (col.LanguageType == "boolean") {
       <label nz-checkbox id="@(col.ConvertedName)" name="@(col.ConvertedName)" for="@(col.ConvertedName)"
-        [(ngModel)]="model.@(col.ConvertedName)">
+        [(ngModel)]="model.@(col.ConvertedName)" [nzDisabled]="!editable">
         @col.GetSummary()
       </label>
     } else {

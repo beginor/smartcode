@@ -7,95 +7,97 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
+@@let user = account.currentUser();
 <div class="container-fluid">
   <div class="row">
-    <div class="col" *ngIf="(account.info | async) as info">
-      <nz-card class="ant-card-data-list" nzTitle="@(table.GetSummary())"
-        [nzExtra]="cardTools">
+    <div class="col">
+      <nz-card class="ant-card-data-list" nzTitle="@(table.GetSummary())" [nzExtra]="cardTools">
         <ng-template #cardTools>
           <nz-space>
             <nz-input-group nzSearch [nzAddOnAfter]="suffixIconSearch" *nzSpaceItem>
-              <input nz-input type="text" [(ngModel)]="vm.searchModel.keywords"
-                (keyup.enter)="loadData({})"
+              <input nz-input type="text" [(ngModel)]="vm.searchModel.keywords" (keyup.enter)="loadData({})"
                 placeholder="输入关键字进行查询@(table.GetSummary())"/>
               <ng-template #suffixIconSearch>
-                <button *ngIf="vm.searchModel.keywords" class="px-2" nz-button type="button" nzSearch
-                  (click)="clearKeywords()">
-                  <svg-icon iconPath="bi/x" />
-                </button>
-                <button class="px-2" nz-button type="button" nzSearch
-                  (click)="loadData({})">
+                @@if (vm.searchModel.keywords) {
+                  <button *ngIf="vm.searchModel.keywords" class="px-2" nz-button type="button" nzSearch (click)="clearKeywords()">
+                    <svg-icon iconPath="bi/x" />
+                  </button>
+                }
+                <button class="px-2" nz-button type="button" nzSearch (click)="loadData({})">
                   <svg-icon iconPath="bi/search" />
                 </button>
               </ng-template>
             </nz-input-group>
             <nz-button-group *nzSpaceItem>
-              <button *ngIf="info.privileges['@(table.Name).create']"
-                type="button" nz-button nzType="primary"
-                (click)="showDetail('0', true)">
-                <svg-icon class="me-1" iconPath="bi/plus"></svg-icon> 新建(@table.GetSummary())
-              </button>
-              <button type="button" nz-button nzType="default"
-                (click)="loadData({})">
+              @@if (user.privileges['@(table.Name).create']) {
+                <button type="button" nz-button nzType="primary" (click)="showDetail('0', true)">
+                    <svg-icon class="me-1" iconPath="bi/plus"></svg-icon> 新建(@table.GetSummary())
+                </button>
+              }
+              <button type="button" nz-button nzType="default" (click)="loadData({})">
                 <svg-icon class="me-1" iconPath="bi/arrow-repeat"></svg-icon> 刷新
               </button>
             </nz-button-group>
           </nz-space>
         </ng-template>
-        <ng-container *ngIf="(vm.data | async) as data">
-          <nz-table nzSize="small"[nzFrontPagination]="false"
-            [nzShowSizeChanger]="vm.showPagination"
-            [nzShowPagination]="vm.showPagination"
-            [nzShowQuickJumper]="vm.showPagination"
-            [nzData]="data"
-            [nzTotal]="(vm.total | async)!"
-            [nzShowTotal]="totalTpl"
-            [nzLoading]="vm.loading"
-            [nzPageIndex]="vm.pageIndex"
-            [nzPageSize]="vm.pageSize"
-            [nzPageSizeOptions]="vm.pageSizeOptions"
-            (nzQueryParams)="loadData($event)">
-            <thead>
-              <tr class="sticky-top">
-                <th scope="col" class="text-end text-nowrap table-row-num-col">#</th>
+        @@let data = (vm.data | async)!;
+        <nz-table nzSize="small" [nzFrontPagination]="false"
+          [nzShowSizeChanger]="vm.showPagination"
+          [nzShowPagination]="vm.showPagination"
+          [nzShowQuickJumper]="vm.showPagination"
+          [nzData]="data"
+          [nzTotal]="(vm.total | async)!"
+          [nzShowTotal]="totalTpl"
+          [nzLoading]="vm.loading"
+          [nzPageIndex]="vm.pageIndex"
+          [nzPageSize]="vm.pageSize"
+          [nzPageSizeOptions]="vm.pageSizeOptions"
+          (nzQueryParams)="loadData($event)">
+          <thead>
+            <tr class="sticky-top">
+              <th scope="col" class="text-end text-nowrap table-row-num-col">#</th>
 @foreach (var col in table.Columns) {
-                <th scope="col" class="text-start text-nowrap">@col.GetSummary()</th>
+              <th scope="col" class="text-start text-nowrap">@col.GetSummary()</th>
 }
-                <th scope="col" class="text-center text-nowrap table-action-col-3">操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of data; let i = index;">
+              <th scope="col" class="text-center text-nowrap table-action-col-3">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            @@for (item of data; track item.id; let i=$index) {
+              <tr>
                 <th scope="row" class="text-end">{{i+1+vm.searchModel.skip}}</th>
 @foreach (var col in table.Columns) {
                 <td class='@($"{(ConvertTsType(col) == "number" ? "text-end" : "text-start")}")'>{{item.@(col.ConvertedName)}}</td>
 }
                 <td class="text-center">
                   <nz-button-group nzSize="small">
-                    <button *ngIf="info.privileges['@(table.Name).read_by_id']"
-                      class="px-2" type="button" nz-button nzType="default"
-                      nz-tooltip="详情" nzTooltipPlacement="top"
-                      (click)="showDetail(item.id, false)">
-                      <svg-icon iconPath="bi/info-square"></svg-icon>
-                    </button>
-                    <button *ngIf="info.privileges['@(table.Name).update']"
-                      class="px-2" type="button" nz-button nzType="default"
-                      nz-tooltip="编辑" nzTooltipPlacement="top"
-                      (click)="showDetail(item.id, true)">
-                      <svg-icon iconPath="bi/pencil-square"></svg-icon>
-                    </button>
-                    <button *ngIf="info.privileges['@(table.Name).delete']"
-                      class="px-2" type="button" nz-button nzType="default"
-                      nz-tooltip="删除" nzTooltipPlacement="top"
-                      (click)="delete(item.id)">
-                      <svg-icon iconPath="bi/trash"></svg-icon>
-                    </button>
+                    @@if (user.privileges['@(table.Name).read_by_id']) {
+                      <button class="px-2" type="button" nz-button nzType="default"
+                        nz-tooltip="详情" nzTooltipPlacement="top"
+                        (click)="showDetail(item.id, false)">
+                        <svg-icon iconPath="bi/info-square"></svg-icon>
+                      </button>
+                    }
+                    @@if (user.privileges['@(table.Name).update']) {
+                      <button class="px-2" type="button" nz-button nzType="default"
+                        nz-tooltip="编辑" nzTooltipPlacement="top"
+                        (click)="showDetail(item.id, true)">
+                        <svg-icon iconPath="bi/pencil-square"></svg-icon>
+                      </button>
+                    }
+                    @@if (user.privileges['@(table.Name).delete']) {
+                      <button class="px-2" type="button" nz-button nzType="default"
+                        nz-tooltip="删除" nzTooltipPlacement="top"
+                        (click)="delete(item.id)">
+                        <svg-icon iconPath="bi/trash"></svg-icon>
+                      </button>
+                    }
                   </nz-button-group>
                 </td>
               </tr>
-            </tbody>
-          </nz-table>
-        </ng-container>
+            }
+          </tbody>
+        </nz-table>
       </nz-card>
       <ng-template #totalTpl let-total let-range="range">
         当前显示 {{total}} 条记录中的第 {{range[0]}} 至 {{range[1]}} 条

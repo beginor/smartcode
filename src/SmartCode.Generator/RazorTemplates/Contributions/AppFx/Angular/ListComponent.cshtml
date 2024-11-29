@@ -80,18 +80,16 @@ export class ListComponent implements OnInit {
     }
 
     public delete(id: string): void {
-        this.vm.delete(id).then(deleted => {
+        void this.vm.delete(id).then(deleted => {
             if (deleted) {
                 void this.vm.search();
             }
-        }).catch(ex => {
-            console.log(`offcanvas canceled with reason ${ex}`)
         });
     }
 
     public async clearKeywords(): Promise<void> {
         this.vm.searchModel.keywords = '';
-        this.loadData({});
+        await this.loadData({});
     }
 
 }
