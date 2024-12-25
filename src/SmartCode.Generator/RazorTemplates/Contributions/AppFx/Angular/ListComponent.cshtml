@@ -48,7 +48,7 @@ export class ListComponent implements OnInit {
         ]);
     }
 
-    public async loadData({
+    protected async loadData({
         pageSize = 20,
         pageIndex = 1,
         // sort = [],
@@ -59,7 +59,7 @@ export class ListComponent implements OnInit {
         await this.vm.search();
     }
 
-    public showDetail(id: string, editable: boolean): void {
+    protected showDetail(id: string, editable: boolean): void {
         const ref = this.drawerService.create<
             DetailComponent,
             Partial<DetailComponent>,
@@ -79,7 +79,7 @@ export class ListComponent implements OnInit {
         });
     }
 
-    public delete(id: string): void {
+    protected delete(id: string): void {
         void this.vm.delete(id).then(deleted => {
             if (deleted) {
                 void this.vm.search();
@@ -87,7 +87,7 @@ export class ListComponent implements OnInit {
         });
     }
 
-    public async clearKeywords(): Promise<void> {
+    protected async clearKeywords(): Promise<void> {
         this.vm.searchModel.keywords = '';
         await this.loadData({});
     }

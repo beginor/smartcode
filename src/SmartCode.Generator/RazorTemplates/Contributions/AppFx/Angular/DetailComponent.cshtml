@@ -50,11 +50,15 @@ export class DetailComponent implements OnInit {
 
     constructor(
         private drawerRef: NzDrawerRef,
-        public account: AccountService,
-        public vm: @(ToClassName(table.Name))Service
+        protected account: AccountService,
+        protected vm: @(ToClassName(table.Name))Service
     ) { }
 
-    public async ngOnInit(): Promise<void> {
+    public ngOnInit(): void {
+        void this.loadData();
+    }
+
+    private async loadData(): Promise<void> {
         if (this.id !== '0') {
             const model = await this.vm.getById(this.id);
             if (!!model) {
@@ -63,11 +67,11 @@ export class DetailComponent implements OnInit {
         }
     }
 
-    public cancel(): void {
+    protected cancel(): void {
         this.drawerRef.close('');
     }
 
-    public async save(): Promise<void> {
+    protected async save(): Promise<void> {
         if (this.id !== '0') {
             await this.vm.update(this.id, this.model);
         }
