@@ -10,10 +10,18 @@
 import { Component, OnInit } from '@@angular/core';
 import { CommonModule } from '@@angular/common';
 import { FormsModule } from '@@angular/forms';
-import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
-import { AccountService, SvgIconComponent } from 'app-shared';
+import { NzDrawerModule, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzInputModule } from 'ng-zorro-antd/input';
+
+import { AccountService } from 'app-shared';
 import { UiService, AntdModule } from 'projects/web/src/app/common';
 
 import { @(ToClassName(table.Name))Service } from '../@(ToPath(table.Name)).service';
@@ -25,8 +33,15 @@ import { DetailComponent } from '../detail/detail.component';
     imports: [
         CommonModule,
         FormsModule,
-        AntdModule,
-        SvgIconComponent,
+        NzDrawerModule,
+        NzTableModule,
+        NzCardModule,
+        NzSpaceModule,
+        NzIconModule,
+        NzFormModule,
+        NzButtonModule,
+        NzToolTipModule,
+        NzInputModule,
     ],
     templateUrl: './list.component.html',
     styleUrl: './list.component.css'
