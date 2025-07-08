@@ -8,6 +8,7 @@
     var table = Model.GetCurrentTable();
 }
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,14 +35,15 @@ public class @(table.ConvertedName)Controller(
     [HttpGet("")]
     [Authorize("@(table.Name).read")]
     public async Task<ActionResult<PaginatedResponseModel<@(table.ConvertedName)Model>>> Search(
-        [FromQuery]@(table.ConvertedName)SearchModel model
+        [FromQuery]@(table.ConvertedName)SearchModel model,
+        CancellationToken token
     ) {
         try {
-            var result = await repository.SearchAsync(model);
+            var result = await repository.SearchAsync(model, token);
             return result;
         }
         catch (InvalidOperationException ex) {
-            logger.LogWarning(ex.GetOriginalMessage());
+            logger.LogError(ex.GetOriginalMessage());
             return BadRequest();
         }
         catch (Exception ex) {
@@ -56,13 +58,16 @@ public class @(table.ConvertedName)Controller(
     /// <response code="500">服务器内部错误</response>
     [HttpGet("{id:long}")]
     [Authorize("@(table.Name).read_by_id")]
-    public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(long id) {
+    public async Task<ActionResult<@(table.ConvertedName)Model>> GetById(
+        long id,
+        CancellationToken token
+    ) {
         try {
-            var result = await repository.GetByIdAsync(id);
+            var result = await repository.GetByIdAsync(id, token);
             return result;
         }
         catch (InvalidOperationException ex) {
-            logger.LogWarning(ex.GetOriginalMessage());
+            logger.LogError(ex.GetOriginalMessage());
             return BadRequest();
         }
         catch (Exception ex) {
@@ -78,14 +83,15 @@ public class @(table.ConvertedName)Controller(
     [HttpPost("")]
     [Authorize("@(table.Name).create")]
     public async Task<ActionResult<@(table.ConvertedName)Model>> Create(
-        [FromBody]@(table.ConvertedName)Model model
+        [FromBody]@(table.ConvertedName)Model model,
+        CancellationToken token
     ) {
         try {
-            await repository.SaveAsync(model);
+            await repository.SaveAsync(model, token);
             return model;
         }
         catch (InvalidOperationException ex) {
-            logger.LogWarning(ex.GetOriginalMessage());
+            logger.LogError(ex.GetOriginalMessage());
             return BadRequest();
         }
         catch (Exception ex) {
@@ -104,14 +110,15 @@ public class @(table.ConvertedName)Controller(
     [Authorize("@(table.Name).update")]
     public async Task<ActionResult<@(table.ConvertedName)Model>> Update(
         [FromRoute]long id,
-        [FromBody]@(table.ConvertedName)Model model
+        [FromBody]@(table.ConvertedName)Model model,
+        CancellationToken token
     ) {
         try {
-            await repository.UpdateAsync(id, model);
+            await repository.UpdateAsync(id, model, token);
             return model;
         }
         catch (InvalidOperationException ex) {
-            logger.LogWarning(ex.GetOriginalMessage());
+            logger.LogError(ex.GetOriginalMessage());
             return BadRequest();
         }
         catch (Exception ex) {
@@ -127,13 +134,16 @@ public class @(table.ConvertedName)Controller(
     [HttpDelete("{id:long}")]
     [ProducesResponseType(204)]
     [Authorize("@(table.Name).delete")]
-    public async Task<ActionResult> Delete(long id) {
+    public async Task<ActionResult> Delete(
+        long id,
+        CancellationToken token
+    ) {
         try {
-            await repository.DeleteAsync(id);
+            await repository.DeleteAsync(id, token);
             return NoContent();
         }
         catch (InvalidOperationException ex) {
-            logger.LogWarning(ex.GetOriginalMessage());
+            logger.LogError(ex.GetOriginalMessage());
             return BadRequest();
         }
         catch (Exception ex) {

@@ -10,10 +10,15 @@
 import { Component, OnInit } from '@@angular/core';
 import { CommonModule } from '@@angular/common';
 import { FormsModule } from '@@angular/forms';
-import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
-import { AccountService, SvgIconComponent } from 'app-shared';
-import { AntdModule } from 'projects/web/src/app/common';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input'
+import { NzButtonModule } from 'ng-zorro-antd/button';
+
+import { AccountService } from 'app-shared';
 
 import { @(ToClassName(table.Name))Service, @(ToClassName(table.Name))Model } from '../@(ToPath(table.Name)).service';
 
@@ -23,8 +28,11 @@ import { @(ToClassName(table.Name))Service, @(ToClassName(table.Name))Model } fr
     imports: [
         CommonModule,
         FormsModule,
-        AntdModule,
-        SvgIconComponent,
+        NzCardModule,
+        NzIconModule,
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
     ],
     templateUrl: './detail.component.html',
     styleUrl: './detail.component.css',
@@ -46,7 +54,7 @@ export class DetailComponent implements OnInit {
         return title;
     }
     public editable = false;
-    public model: @(ToClassName(table.Name))Model = { id: '0' };
+    public model = { id: '0' } as @(ToClassName(table.Name))Model;
 
     constructor(
         private drawerRef: NzDrawerRef,
