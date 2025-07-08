@@ -19,18 +19,10 @@ namespace SmartCode.Generator.RazorTemplates.Contributions.AppFx {
         }
 
         public static string ConvertCsType(Column column) {
-            // var langType = column.LanguageType;
-            // if (column.IsNullable) {
-            //     langType += "?";
-            // }
-            // return langType;
             if (string.IsNullOrEmpty(column.LanguageType)) {
                 return "NAType";
             }
             if (!column.IsNullable) {
-                return column.LanguageType;
-            }
-            if (column.LanguageType.Contains("[]") || column.LanguageType.ToLower() == "string") {
                 return column.LanguageType;
             }
             return $"{column.LanguageType}?";

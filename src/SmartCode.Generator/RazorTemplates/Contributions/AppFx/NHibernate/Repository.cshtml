@@ -43,11 +43,10 @@ public partial class @(table.ConvertedName)Repository(
         var total = await query.LongCountAsync(token);
         var data = await query.OrderByDescending(e => e.Id)
             .Skip(model.Skip).Take(model.Take)
-            .ProjectTo<@(table.ConvertedName)Model>(Mapper.ConfigurationProvider)
             .ToListAsync(token);
         return new PaginatedResponseModel<@(table.ConvertedName)Model> {
             Total = total,
-            Data = data,
+            Data = Mapper.Map<IList<@(table.ConvertedName)Model>>(data),
             Skip = model.Skip,
             Take = model.Take
         };

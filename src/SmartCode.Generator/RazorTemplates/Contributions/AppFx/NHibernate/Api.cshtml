@@ -55,6 +55,7 @@ public class @(table.ConvertedName)Controller(
     /// <summary>获取指定的 @(table.GetSummary())</summary>
     /// <response code="200">返回 @(table.GetSummary()) 信息</response>
     /// <response code="400">客户端发送错误请求</response>
+    /// <response code="404">NotFound</response>
     /// <response code="500">服务器内部错误</response>
     [HttpGet("{id:long}")]
     [Authorize("@(table.Name).read_by_id")]
@@ -64,6 +65,9 @@ public class @(table.ConvertedName)Controller(
     ) {
         try {
             var result = await repository.GetByIdAsync(id, token);
+            if (result == null) {
+                return NotFound();
+            }
             return result;
         }
         catch (InvalidOperationException ex) {
