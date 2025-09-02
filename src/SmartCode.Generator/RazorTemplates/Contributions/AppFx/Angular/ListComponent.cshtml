@@ -7,7 +7,7 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
-import { Component, OnInit } from '@@angular/core';
+import { Component, OnInit, inject } from '@@angular/core';
 import { CommonModule } from '@@angular/common';
 import { FormsModule } from '@@angular/forms';
 
@@ -25,7 +25,7 @@ import { AccountService } from 'app-shared';
 import { UiService } from 'projects/web/src/app/common';
 
 import { @(ToClassName(table.Name))Service } from '../@(ToPath(table.Name)).service';
-import { DetailComponent } from '../detail/detail.component';
+import { DetailComponent, DetailParams } from '../detail/detail.component';
 
 @@Component({
     selector: '@(ToNgSelector(table.Name))-list',
@@ -48,12 +48,10 @@ import { DetailComponent } from '../detail/detail.component';
 })
 export class ListComponent implements OnInit {
 
-    constructor(
-        private drawerService: NzDrawerService,
-        private ui: UiService,
-        protected account: AccountService,
-        protected vm: @(ToClassName(table.Name))Service
-    ) { }
+    private drawerService = inject(NzDrawerService);
+    private ui = inject(UiService);
+    protected account = inject(AccountService);
+    protected vm = inject(@(ToClassName(table.Name))Service);
 
     public ngOnInit(): void {
         this.ui.breadcrumbs.set([
@@ -77,7 +75,7 @@ export class ListComponent implements OnInit {
     protected showDetail(id: string, editable: boolean): void {
         const ref = this.drawerService.create<
             DetailComponent,
-            Partial<DetailComponent>,
+            DetailParams,
             string
         >({
             nzClosable: false,

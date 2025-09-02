@@ -7,28 +7,28 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
-@@let user = account.currentUser();
+@("@let user = account.current();")
 <nz-card class="ant-card-data-detail m-0" [nzTitle]="title" [nzExtra]="toolsTpl"
-  [nzActions]="editable ? [okTpl, cancelTpl] : []">
+  [nzActions]="params.editable ? [okTpl, cancelTpl] : []">
   <ng-template #toolsTpl>
-    <nz-button-group nzSize="small">
-      @@if (user.privileges['@(table.Name).update'] && editable) {
+    <nz-space-compact nzSize="small">
+      @@if (user.privileges['@(table.Name).update'] && params.editable) {
         <button type="button" nz-button nzType="primary"
           (click)="save()" [disabled]="!detailForm.valid">
-          <svg-icon class="me-1" iconPath="bi/check" /> 保存
+          <nz-icon nzType="check" /> 保存
         </button>
       }
       <button type="button" nz-button nzType="default" (click)="cancel()">
-        <svg-icon class="me-1" iconPath="bi/x" /> 取消
+        <nz-icon nzType="close" /> 取消
       </button>
-    </nz-button-group>
+    </nz-space-compact>
   </ng-template>
   <form nz-form nzLayout="vertical" #detailForm="ngForm">
 @foreach (var col in table.Columns) {
     <nz-form-item>
     @if (col.LanguageType == "boolean") {
       <label nz-checkbox id="@(col.ConvertedName)" name="@(col.ConvertedName)" for="@(col.ConvertedName)"
-        [(ngModel)]="model.@(col.ConvertedName)" [nzDisabled]="!editable">
+        [(ngModel)]="model.@(col.ConvertedName)" [nzDisabled]="!params.editable">
         @col.GetSummary()
       </label>
     } else {
@@ -38,7 +38,7 @@
       <nz-form-control [nzHasFeedback]="@(col.IsRequired())">
         <input nz-input type="text" id="@(col.ConvertedName)" name="@(col.ConvertedName)"
           placeholder="请输入@(col.GetSummary()) ..." [required]="@(col.IsRequired())"
-          [disabled]="!editable"
+          [disabled]="!params.editable"
           [(ngModel)]="model.@(col.ConvertedName)"
         />
       </nz-form-control>
@@ -47,16 +47,16 @@
 }
   </form>
   <ng-template #okTpl>
-    @@if (user.privileges['@(table.Name).update'] && editable) {
+    @@if (user.privileges['@(table.Name).update'] && params.editable) {
       <button class="float-start ms-4"
         nz-button nzType="primary" (click)="save()" [disabled]="!detailForm.valid">
-        <svg-icon class="me-1" iconPath="bi/check" /> 保存
+        <nz-icon nzType="check" /> 保存
       </button>
     }
   </ng-template>
   <ng-template #cancelTpl>
     <button class="float-end me-4" type="button" nz-button nzType="default" (click)="cancel()">
-      <svg-icon class="me-1" iconPath="bi/x" /> 取消
+      <nz-icon nzType="close" /> 取消
     </button>
   </ng-template>
 </nz-card>

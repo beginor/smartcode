@@ -7,16 +7,18 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
-import { Component, OnInit } from '@@angular/core';
+import { Component, OnInit, inject } from '@@angular/core';
 import { CommonModule } from '@@angular/common';
 import { FormsModule } from '@@angular/forms';
 
-import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { NzDrawerRef, NZ_DRAWER_DATA } from 'ng-zorro-antd/drawer';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 import { AccountService } from 'app-shared';
 
@@ -33,19 +35,25 @@ import { @(ToClassName(table.Name))Service, @(ToClassName(table.Name))Model } fr
         NzFormModule,
         NzInputModule,
         NzButtonModule,
+        NzSpaceModule,
+        NzCheckboxModule,
     ],
     templateUrl: './detail.component.html',
     styleUrl: './detail.component.css',
 })
 export class DetailComponent implements OnInit {
 
-    public id = '0';
+    public params = inject<DetailParams>(NZ_DRAWER_DATA);
+    private drawerRef = inject(NzDrawerRef);
+    protected account = inject(AccountService);
+    protected vm = inject(@(ToClassName(table.Name))Service);
+
     public get title(): string {
         let title = '';
-        if (this.id === '0') {
+        if (this.params.id === '0') {
             title = '新建@(table.GetSummary())';
         }
-        else if (this.editable) {
+        else if (this.params.editable) {
             title = '编辑@(table.GetSummary())';
         }
         else {
@@ -53,35 +61,28 @@ export class DetailComponent implements OnInit {
         }
         return title;
     }
-    public editable = false;
     public model = { id: '0' } as @(ToClassName(table.Name))Model;
-
-    constructor(
-        private drawerRef: NzDrawerRef,
-        protected account: AccountService,
-        protected vm: @(ToClassName(table.Name))Service
-    ) { }
 
     public ngOnInit(): void {
         void this.loadData();
     }
 
     private async loadData(): Promise<void> {
-        if (this.id !== '0') {
-            const model = await this.vm.getById(this.id);
-            if (!!model) {
+        if (this.params.id !== '0') {
+            const model = await this.vm.getById(this.params.id);
+            if (model) {
                 this.model = model;
             }
         }
     }
 
     protected cancel(): void {
-        this.drawerRef.close('');
+        this.drawerRef.close();
     }
 
     protected async save(): Promise<void> {
-        if (this.id !== '0') {
-            await this.vm.update(this.id, this.model);
+        if (this.params.id !== '0') {
+            await this.vm.update(this.params.id, this.model);
         }
         else {
             await this.vm.create(this.model);
@@ -89,4 +90,9 @@ export class DetailComponent implements OnInit {
         this.drawerRef.close('ok');
     }
 
+}
+
+export interface DetailParams {
+    id: string;
+    editable: boolean;
 }

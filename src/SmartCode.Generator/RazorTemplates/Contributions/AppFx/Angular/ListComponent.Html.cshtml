@@ -7,7 +7,7 @@
     var build = Model.Build;
     var table = Model.GetCurrentTable();
 }
-@@let user = account.currentUser();
+@("@let user = account.current();")
 <nz-card class="ant-card-data-list" nzTitle="@(table.GetSummary())" [nzExtra]="cardTools">
   <ng-template #cardTools>
     <nz-space>
@@ -25,7 +25,7 @@
           </button>
         </ng-template>
       </nz-input-group>
-      <nz-button-group *nzSpaceItem>
+      <nz-space-compact *nzSpaceItem>
         @@if (user.privileges['@(table.Name).create']) {
           <button type="button" nz-button nzType="primary" (click)="showDetail('0', true)">
             <nz-icon nzType="plus" /> 新建(@table.GetSummary())
@@ -34,14 +34,14 @@
         <button type="button" nz-button nzType="default" (click)="loadData({})">
           <nz-icon nzType="sync" /> 刷新
         </button>
-      </nz-button-group>
+      </nz-space-compact>
     </nz-space>
   </ng-template>
   @@let data = (vm.data | async)!;
   <nz-table nzSize="small" [nzFrontPagination]="false"
-    [nzShowSizeChanger]="vm.showPagination"
-    [nzShowPagination]="vm.showPagination"
-    [nzShowQuickJumper]="vm.showPagination"
+    [nzShowSizeChanger]="true"
+    [nzShowPagination]="true"
+    [nzShowQuickJumper]="true"
     [nzData]="data"
     [nzTotal]="(vm.total | async)!"
     [nzShowTotal]="totalTpl"
@@ -67,29 +67,29 @@
           <td class='@($"{(ConvertTsType(col) == "number" ? "text-end" : "text-start")}")'>{{item.@(col.ConvertedName)}}</td>
 }
           <td class="text-center">
-            <nz-button-group nzSize="small">
+            <nz-space-compact nzSize="small">
               @@if (user.privileges['@(table.Name).read_by_id']) {
                 <button type="button" nz-button nzType="default"
                   nz-tooltip="详情" nzTooltipPlacement="top"
                   (click)="showDetail(item.id, false)">
-                  <nz-icon nzType="info" />
+                  <nz-icon nzType="bi:info-square" />
                 </button>
               }
               @@if (user.privileges['@(table.Name).update']) {
                 <button type="button" nz-button nzType="default"
                   nz-tooltip="编辑" nzTooltipPlacement="top"
                   (click)="showDetail(item.id, true)">
-                  <nz-icon nzType="edit" />
+                  <nz-icon nzType="bi:pencil-square" />
                 </button>
               }
               @@if (user.privileges['@(table.Name).delete']) {
                 <button type="button" nz-button nzType="default"
                   nz-tooltip="删除" nzTooltipPlacement="top"
                   (click)="delete(item.id)">
-                  <nz-icon nzType="delete" />
+                  <nz-icon nzType="bi:trash" />
                 </button>
               }
-            </nz-button-group>
+            </nz-space-compact>
           </td>
         </tr>
       }
