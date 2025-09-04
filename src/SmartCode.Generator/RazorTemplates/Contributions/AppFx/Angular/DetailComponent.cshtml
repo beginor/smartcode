@@ -43,12 +43,12 @@ import { @(ToClassName(table.Name))Service, @(ToClassName(table.Name))Model } fr
 })
 export class DetailComponent implements OnInit {
 
-    public params = inject<DetailParams>(NZ_DRAWER_DATA);
     private drawerRef = inject(NzDrawerRef);
     protected account = inject(AccountService);
     protected vm = inject(@(ToClassName(table.Name))Service);
+    protected params = inject<DetailParams>(NZ_DRAWER_DATA);
 
-    public get title(): string {
+    protected get title(): string {
         let title = '';
         if (this.params.id === '0') {
             title = '新建@(table.GetSummary())';
@@ -61,7 +61,7 @@ export class DetailComponent implements OnInit {
         }
         return title;
     }
-    public model = { id: '0' } as @(ToClassName(table.Name))Model;
+    protected model = { id: '0' } as @(ToClassName(table.Name))Model;
 
     public ngOnInit(): void {
         void this.loadData();

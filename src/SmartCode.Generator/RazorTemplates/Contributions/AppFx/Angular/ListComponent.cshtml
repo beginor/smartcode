@@ -73,11 +73,7 @@ export class ListComponent implements OnInit {
     }
 
     protected showDetail(id: string, editable: boolean): void {
-        const ref = this.drawerService.create<
-            DetailComponent,
-            DetailParams,
-            string
-        >({
+        const ref = this.drawerService.create<DetailComponent, DetailParams, string>({ // eslint-disable-line @@stylistic/max-len
             nzClosable: false,
             nzPlacement: 'right',
             nzWidth: '40vw',
