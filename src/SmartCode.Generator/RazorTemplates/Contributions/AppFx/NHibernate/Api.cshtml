@@ -6,6 +6,10 @@
     var project = Model.Project;
     var buildTask = Model.Build;
     var table = Model.GetCurrentTable();
+    var useIRepository = true;
+    if (buildTask.Parameters.ContainsKey("UseIRepository")) {
+        useIRepository = bool.Parse((string)buildTask.Parameters["UseIRepository"]);
+    }
 }
 using System;
 using System.Threading;
@@ -24,8 +28,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Controllers;
 [ApiController]
 [Route("api/@ToPath(table.Name)")]
 public class @(table.ConvertedName)Controller(
-    ILogger<@(table.ConvertedName)Controller> logger,
-    I@(table.ConvertedName)Repository repository
+    ILogger<@(table.ConvertedName)Controller> logger, @if (useIRepository) {<text>I</text>}@(table.ConvertedName)Repository repository
 ) : Controller {
 
     /// <summary>搜索 @(table.GetSummary()) , 分页返回结果</summary>

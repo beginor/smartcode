@@ -10,6 +10,10 @@
     var pkCount = pkCols.Count();
     var firstPk = pkCols.First();
     var normalCols = table.Columns.Where(col => !col.IsPrimaryKey);
+    var inheritsIRepository = true;
+    if (buildTask.Parameters.ContainsKey("InheritsIRepository")) {
+        inheritsIRepository = bool.Parse((string)buildTask.Parameters["InheritsIRepository"]);
+    }
 }
 using System;
 using System.Collections.Generic;
@@ -30,8 +34,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Repositories;
 /// <summary>@table.GetSummary()仓储实现</summary>
 public partial class @(table.ConvertedName)Repository(
     ISession session, IMapper mapper
-) : HibernateRepository<@(table.ConvertedName), @(table.ConvertedName)Model, @(ConvertCsType(firstPk))>(session, mapper),
-    I@(table.ConvertedName)Repository {
+) : HibernateRepository<@(table.ConvertedName), @(table.ConvertedName)Model, @(ConvertCsType(firstPk))>(session, mapper)@if (inheritsIRepository) {<text>, I@(table.ConvertedName)Repository </text>} {
 
     /// <summary>搜索 @table.GetSummary() ，返回分页结果。</summary>
     public async Task<PaginatedResponseModel<@(table.ConvertedName)Model>> SearchAsync(

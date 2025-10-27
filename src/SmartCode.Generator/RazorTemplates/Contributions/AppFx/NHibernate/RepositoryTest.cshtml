@@ -6,12 +6,16 @@
     var project = Model.Project;
     var buildTask = Model.Build;
     var table = Model.GetCurrentTable();
+    var useIRepository = true;
+    if (buildTask.Parameters.ContainsKey("UseIRepository")) {
+        useIRepository = bool.Parse((string)buildTask.Parameters["UseIRepository"]);
+    }
 }
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NHibernate;
-using NHibernate.NetCore;
+using NHibernate.Extensions.NetCore;
 using NUnit.Framework;
 using @(project.Author).@(project.Module).Data.Entities;
 using @(project.Author).@(project.Module).Data.Repositories;
@@ -21,7 +25,7 @@ namespace @(project.Author).@(project.Module).@(buildTask.Module).Data;
 
 /// <summary>@table.GetSummary()仓储测试</summary>
 [TestFixture]
-public class @(table.ConvertedName)RepositoryTest : BaseTest<I@(table.ConvertedName)Repository> {
+public class @(table.ConvertedName)RepositoryTest : BaseTest<@if (useIRepository) {<text>I</text>}@(table.ConvertedName)Repository> {
 
     [Test]
     public void _01_CanResolveTarget() {
