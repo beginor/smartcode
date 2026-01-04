@@ -1,0 +1,38 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path="build/version.props" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Code Generator/">
+    <Project Path="src/SmartCode.Generator/SmartCode.Generator.csproj" />
+  </Folder>
+  <Folder Name="/ETL/">
+    <Project Path="src/SmartCode.ETL.LoadToES/SmartCode.ETL.LoadToES.csproj" />
+    <Project Path="src/SmartCode.ETL.PostgreSql/SmartCode.ETL.PostgreSql.csproj" />
+    <Project Path="src/SmartCode.ETL.SQLite/SmartCode.ETL.SQLite.csproj" />
+    <Project Path="src/SmartCode.ETL/SmartCode.ETL.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE" />
+    <File Path="README-EN.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/doc/">
+    <File Path="doc/common-problem.md" />
+    <File Path="doc/SmartCode-ETL-ES.yml" />
+    <File Path="doc/SmartCode-ETL.yml" />
+    <File Path="doc/SmartCode-Gen-ETL.yml" />
+    <File Path="doc/SmartCode-Spring-Boot.yml" />
+    <File Path="doc/SmartCode.ETL-EN.md" />
+    <File Path="doc/SmartCode.ETL.md" />
+    <File Path="doc/SmartCode.json" />
+    <File Path="doc/SmartCode.yml" />
+  </Folder>
+  <Project Path="src/SmartCode.App/SmartCode.App.csproj" />
+  <Project Path="src/SmartCode.CLI/SmartCode.CLI.csproj" />
+  <Project Path="src/SmartCode.Db/SmartCode.Db.csproj" />
+  <Project Path="src/SmartCode.TemplateEngine/SmartCode.TemplateEngine.csproj" />
+  <Project Path="src/SmartCode.Tests/SmartCode.Tests.csproj" />
+  <Project Path="src/SmartCode/SmartCode.csproj" />
+</Solution>
