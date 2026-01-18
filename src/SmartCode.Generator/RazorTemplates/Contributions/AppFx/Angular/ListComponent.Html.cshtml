@@ -51,12 +51,12 @@
     [nzPageSizeOptions]="vm.pageSizeOptions"
     (nzQueryParams)="loadData($event)">
     <thead>
-      <tr class="sticky-top">
-        <th scope="col" class="text-end text-nowrap table-row-num-col">#</th>
+      <tr class="sticky top-0 bg-gray-200 z-20">
+        <th scope="col" class="text-end! text-nowrap table-row-num-col">#</th>
 @foreach (var col in table.Columns) {
-        <th scope="col" class="text-start text-nowrap">@col.GetSummary()</th>
+        <th scope="col" class="text-start! text-nowrap">@col.GetSummary()</th>
 }
-        <th scope="col" class="text-center text-nowrap table-action-col-3">操作</th>
+        <th scope="col" class="text-center! text-nowrap table-action-col-3">操作</th>
       </tr>
     </thead>
     <tbody>
