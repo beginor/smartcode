@@ -9,10 +9,6 @@ namespace RazorEngineCore
         {
         }
 
-        protected RazorEngineException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
         public RazorEngineException(string message) : base(message)
         {
         }
