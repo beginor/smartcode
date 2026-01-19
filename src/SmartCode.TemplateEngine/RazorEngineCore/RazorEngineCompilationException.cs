@@ -12,16 +12,12 @@ namespace RazorEngineCore
         {
         }
 
-        protected RazorEngineCompilationException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
         public RazorEngineCompilationException(Exception innerException) : base(null, innerException)
         {
         }
 
         public List<Diagnostic> Errors { get; set; }
-        
+
         public string GeneratedCode { get; set; }
 
         public override string Message
